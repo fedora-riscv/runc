@@ -6,7 +6,7 @@
 %global with_unit_test 1
 %else
 %global with_devel 0
-%global with_bundled 0
+%global with_bundled 1
 %global with_debug 0
 %global with_check 0
 %global with_unit_test 0
@@ -25,12 +25,15 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          90e6d3763e917ca0d6c24c63c07320f0424fcd0c
+%global commit          97bc9a7faf3dd660d9be90a2880b2e37f3cdbf38
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           %{repo}
-Version:        0.2
-Release:        0.2.git%{shortcommit}%{?dist}
+%if 0%{?fedora}
+Epoch:          1
+%endif
+Version:        0.0.5
+Release:        0.1.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -67,14 +70,19 @@ BuildArch:     noarch
 
 %if 0%{?with_check}
 BuildRequires: golang(github.com/Sirupsen/logrus)
+BuildRequires: golang(github.com/codegangsta/cli)
 BuildRequires: golang(github.com/coreos/go-systemd/dbus)
 BuildRequires: golang(github.com/coreos/go-systemd/util)
 BuildRequires: golang(github.com/docker/docker/pkg/mount)
 BuildRequires: golang(github.com/docker/docker/pkg/symlink)
+BuildRequires: golang(github.com/docker/docker/pkg/term)
 BuildRequires: golang(github.com/docker/docker/pkg/units)
 BuildRequires: golang(github.com/godbus/dbus)
 BuildRequires: golang(github.com/golang/protobuf/proto)
+BuildRequires: golang(github.com/opencontainers/specs)
+BuildRequires: golang(github.com/seccomp/libseccomp-golang)
 BuildRequires: golang(github.com/syndtr/gocapability/capability)
+BuildRequires: golang(github.com/vishvananda/netlink)
 %endif
 
 Requires:      golang(github.com/Sirupsen/logrus)
@@ -85,7 +93,9 @@ Requires:      golang(github.com/docker/docker/pkg/symlink)
 Requires:      golang(github.com/docker/docker/pkg/units)
 Requires:      golang(github.com/godbus/dbus)
 Requires:      golang(github.com/golang/protobuf/proto)
+Requires:      golang(github.com/seccomp/libseccomp-golang)
 Requires:      golang(github.com/syndtr/gocapability/capability)
+Requires:      golang(github.com/vishvananda/netlink)
 
 Provides:      golang(%{import_path}/libcontainer) = %{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
@@ -98,7 +108,6 @@ Provides:      golang(%{import_path}/libcontainer/criurpc) = %{version}-%{releas
 Provides:      golang(%{import_path}/libcontainer/devices) = %{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/integration) = %{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/label) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/netlink) = %{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/nsenter) = %{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/seccomp) = %{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/selinux) = %{version}-%{release}
@@ -253,6 +262,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Nov 25 2015 jchaloup <jchaloup@redhat.com> - 1:0.0.5-0.1.git97bc9a7
+- Update to 0.0.5, introduce Epoch for Fedora due to 0.2 version instead of 0.0.2
+
 * Fri Aug 21 2015 Jan Chaloupka <jchaloup@redhat.com> - 0.2-0.2.git90e6d37
 - First package for Fedora
   resolves: #1255179
