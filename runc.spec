@@ -29,8 +29,10 @@
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           %{repo}
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} == 6
 Epoch:          1
+%else
+Epoch:          0
 %endif
 Version:        0.0.5
 Release:        0.1.git%{shortcommit}%{?dist}
@@ -38,6 +40,8 @@ Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
 Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
+
+Patch0:         mount.Info-mount.MountInfo.patch
 
 ExclusiveArch:  x86_64
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
@@ -97,25 +101,25 @@ Requires:      golang(github.com/seccomp/libseccomp-golang)
 Requires:      golang(github.com/syndtr/gocapability/capability)
 Requires:      golang(github.com/vishvananda/netlink)
 
-Provides:      golang(%{import_path}/libcontainer) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/cgroups) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/cgroups/fs) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/cgroups/systemd) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/configs) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/configs/validate) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/criurpc) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/devices) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/integration) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/label) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/nsenter) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/seccomp) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/selinux) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/stacktrace) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/system) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/user) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/utils) = %{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/xattr) = %{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/apparmor) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/cgroups) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/cgroups/fs) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/cgroups/systemd) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/configs) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/configs/validate) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/criurpc) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/devices) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/integration) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/label) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/nsenter) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/seccomp) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/selinux) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/stacktrace) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/system) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/user) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/utils) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/xattr) = %{epoch}:%{version}-%{release}
 
 %description devel
 The runc command can be used to start containers which are packaged
@@ -152,6 +156,7 @@ providing packages with %{import_path} prefix.
 
 %prep
 %setup -q -n %{repo}-%{commit}
+%patch0 -p1
 
 %build
 mkdir -p src/github.com/opencontainers
@@ -264,6 +269,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %changelog
 * Wed Nov 25 2015 jchaloup <jchaloup@redhat.com> - 1:0.0.5-0.1.git97bc9a7
 - Update to 0.0.5, introduce Epoch for Fedora due to 0.2 version instead of 0.0.2
+  resolves: #1286114
 
 * Fri Aug 21 2015 Jan Chaloupka <jchaloup@redhat.com> - 0.2-0.2.git90e6d37
 - First package for Fedora
