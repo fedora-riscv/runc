@@ -41,8 +41,6 @@ License:        ASL 2.0
 URL:            https://%{provider_prefix}
 Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
 
-Patch0:         mount.Info-mount.MountInfo.patch
-
 ExclusiveArch:  x86_64
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
@@ -156,7 +154,6 @@ providing packages with %{import_path} prefix.
 
 %prep
 %setup -q -n %{repo}-%{commit}
-%patch0 -p1
 
 %build
 mkdir -p src/github.com/opencontainers
