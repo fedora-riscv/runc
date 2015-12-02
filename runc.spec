@@ -35,7 +35,7 @@ Epoch:          1
 Epoch:          0
 %endif
 Version:        0.0.5
-Release:        0.1.git%{shortcommit}%{?dist}
+Release:        0.2.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -141,7 +141,7 @@ BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 %endif
 
 # test subpackage tests code from devel subpackage
-Requires:        %{name}-devel = %{version}-%{release}
+Requires:        %{name}-devel = %{epoch}:%{version}-%{release}
 
 %description unit-test
 The runc command can be used to start containers which are packaged
@@ -264,6 +264,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Dec 02 2015 jchaloup <jchaloup@redhat.com> - 1:0.0.5-0.2.git97bc9a7
+- unit-test-devel subpackage requires devel with correct epoch
+
 * Wed Nov 25 2015 jchaloup <jchaloup@redhat.com> - 1:0.0.5-0.1.git97bc9a7
 - Update to 0.0.5, introduce Epoch for Fedora due to 0.2 version instead of 0.0.2
   resolves: #1286114
