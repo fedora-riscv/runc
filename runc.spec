@@ -35,7 +35,7 @@ Epoch:          1
 Epoch:          0
 %endif
 Version:        0.0.5
-Release:        0.3.git%{shortcommit}%{?dist}
+Release:        0.4.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -264,6 +264,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Feb 22 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.0.5-0.4.git97bc9a7
+- https://fedoraproject.org/wiki/Changes/golang1.6
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1:0.0.5-0.3.git97bc9a7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
