@@ -25,7 +25,7 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          1a124e9c2da68c867ed2c4f4ff19f0cd95cda0cd
+%global commit          94dc520a5732126985fec249f80c91b9e0601815
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           %{repo}
@@ -34,8 +34,8 @@ Epoch:          1
 %else
 Epoch:          0
 %endif
-Version:        0.0.8
-Release:        0.1.git%{shortcommit}%{?dist}
+Version:        0.0.9
+Release:        0.git%{shortcommit}%{?dist}.1
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -57,7 +57,7 @@ BuildRequires: golang(github.com/docker/docker/pkg/term)
 BuildRequires: golang(github.com/docker/go-units)
 BuildRequires: golang(github.com/godbus/dbus)
 BuildRequires: golang(github.com/golang/protobuf/proto)
-BuildRequires: golang(github.com/opencontainers/specs)
+BuildRequires: golang(github.com/opencontainers/specs/specs-go)
 BuildRequires: golang(github.com/seccomp/libseccomp-golang)
 BuildRequires: golang(github.com/syndtr/gocapability/capability)
 BuildRequires: golang(github.com/vishvananda/netlink)
@@ -267,6 +267,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Mar 16 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.git94dc520.1
+- Update to 0.0.9
+  resolves: #1290943
+
 * Wed Mar 02 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.8-0.1.git1a124e9
 - Update to 0.0.8
 
