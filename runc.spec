@@ -35,7 +35,7 @@ Epoch:          1
 Epoch:          0
 %endif
 Version:        0.0.9
-Release:        0.git%{shortcommit}%{?dist}.1
+Release:        0.1.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -270,7 +270,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
-* Wed Mar 16 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.git94dc520.1
+* Wed Mar 16 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.1.git94dc520
 - Update to 0.0.9
   resolves: #1290943
 
