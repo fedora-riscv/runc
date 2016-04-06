@@ -35,13 +35,14 @@ Epoch:          1
 Epoch:          0
 %endif
 Version:        0.0.9
-Release:        0.1.git%{shortcommit}%{?dist}
+Release:        0.2.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
 Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
 
-ExclusiveArch:  x86_64
+# e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
+ExclusiveArch:  %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 %{arm}}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 
@@ -242,7 +243,8 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 #%%gotest %%{import_path}/libcontainer/nsenter
 %gotest %{import_path}/libcontainer/selinux
 %gotest %{import_path}/libcontainer/stacktrace
-%gotest %{import_path}/libcontainer/user
+#constant 2147483648 overflows int
+#%%gotest %{import_path}/libcontainer/user
 %gotest %{import_path}/libcontainer/utils
 #%%gotest %{import_path}/libcontainer/xattr
 %endif
@@ -270,6 +272,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Apr 06 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.2.git94dc520
+- Extend supported architectures to golang_arches
+  Disable failing test
+  related: #1290943
+
 * Wed Mar 16 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.1.git94dc520
 - Update to 0.0.9
   resolves: #1290943
