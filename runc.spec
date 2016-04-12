@@ -35,7 +35,7 @@ Epoch:          1
 Epoch:          0
 %endif
 Version:        0.0.9
-Release:        0.2.git%{shortcommit}%{?dist}
+Release:        0.3.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -45,6 +45,8 @@ Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcomm
 ExclusiveArch:  %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 %{arm}}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
+
+BuildRequires:  go-md2man
 
 %if ! 0%{?with_bundled}
 BuildRequires: golang(github.com/Sirupsen/logrus)
@@ -179,6 +181,13 @@ export GOPATH=$(pwd):$(pwd)/Godeps/_workspace:%{gopath}
 install -d -p %{buildroot}%{_bindir}
 install -p -m 755 bin/%{name} %{buildroot}%{_bindir}
 
+# generate man pages
+man/md2man-all.sh
+
+# install man pages
+install -d -p %{buildroot}%{_mandir}/man8
+install -p -m 0644 man/man8/*.8 %{buildroot}%{_mandir}/man8/.
+
 # source codes for building projects
 %if 0%{?with_devel}
 install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
@@ -256,6 +265,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %license LICENSE
 %doc MAINTAINERS_GUIDE.md PRINCIPLES.md README.md CONTRIBUTING.md
 %{_bindir}/%{name}
+%{_mandir}/man8/.
 
 %if 0%{?with_devel}
 %files devel -f devel.file-list
@@ -272,6 +282,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Apr 12 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.3.git94dc520
+- Ship man pages too
+  resolves: #1326115
+
 * Wed Apr 06 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.2.git94dc520
 - Extend supported architectures to golang_arches
   Disable failing test
