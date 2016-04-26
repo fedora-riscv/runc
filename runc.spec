@@ -25,7 +25,7 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          94dc520a5732126985fec249f80c91b9e0601815
+%global commit          baf6536d6259209c3edfa2b22237af82942d3dfa
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           %{repo}
@@ -34,8 +34,8 @@ Epoch:          1
 %else
 Epoch:          0
 %endif
-Version:        0.0.9
-Release:        0.3.git%{shortcommit}%{?dist}
+Version:        0.1.1
+Release:        0.1.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -60,6 +60,7 @@ BuildRequires: golang(github.com/docker/docker/pkg/term)
 BuildRequires: golang(github.com/docker/go-units)
 BuildRequires: golang(github.com/godbus/dbus)
 BuildRequires: golang(github.com/golang/protobuf/proto)
+BuildRequires: golang(github.com/opencontainers/runtime-spec/specs-go)
 BuildRequires: golang(github.com/opencontainers/specs/specs-go)
 BuildRequires: golang(github.com/seccomp/libseccomp-golang)
 BuildRequires: golang(github.com/syndtr/gocapability/capability)
@@ -86,6 +87,7 @@ BuildRequires: golang(github.com/docker/docker/pkg/symlink)
 BuildRequires: golang(github.com/docker/go-units)
 BuildRequires: golang(github.com/godbus/dbus)
 BuildRequires: golang(github.com/golang/protobuf/proto)
+BuildRequires: golang(github.com/opencontainers/runtime-spec/specs-go)
 BuildRequires: golang(github.com/seccomp/libseccomp-golang)
 BuildRequires: golang(github.com/syndtr/gocapability/capability)
 BuildRequires: golang(github.com/vishvananda/netlink)
@@ -100,6 +102,7 @@ Requires:      golang(github.com/docker/docker/pkg/symlink)
 Requires:      golang(github.com/docker/go-units)
 Requires:      golang(github.com/godbus/dbus)
 Requires:      golang(github.com/golang/protobuf/proto)
+Requires:      golang(github.com/opencontainers/runtime-spec/specs-go)
 Requires:      golang(github.com/seccomp/libseccomp-golang)
 Requires:      golang(github.com/syndtr/gocapability/capability)
 Requires:      golang(github.com/vishvananda/netlink)
@@ -116,9 +119,11 @@ Provides:      golang(%{import_path}/libcontainer/criurpc) = %{epoch}:%{version}
 Provides:      golang(%{import_path}/libcontainer/devices) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/integration) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/label) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/keys) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/nsenter) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/seccomp) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/selinux) = %{epoch}:%{version}-%{release}
+Provides:      golang(%{import_path}/libcontainer/specconv) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/stacktrace) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/system) = %{epoch}:%{version}-%{release}
 Provides:      golang(%{import_path}/libcontainer/user) = %{epoch}:%{version}-%{release}
@@ -282,6 +287,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Apr 26 2016 jchaloup <jchaloup@redhat.com> - 1:0.1.1-0.1.gitbaf6536
+- Update to v0.1.1
+  resolves: #1330378
+
 * Tue Apr 12 2016 jchaloup <jchaloup@redhat.com> - 1:0.0.9-0.3.git94dc520
 - Ship man pages too
   resolves: #1326115
