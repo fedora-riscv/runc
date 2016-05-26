@@ -25,7 +25,7 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          baf6536d6259209c3edfa2b22237af82942d3dfa
+%global commit          57b997243d52f70a78cfea5e31ccb69f37450b5a
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           %{repo}
@@ -35,7 +35,7 @@ Epoch:          1
 Epoch:          0
 %endif
 Version:        0.1.1
-Release:        2.git%{shortcommit}%{?dist}
+Release:        3.git%{shortcommit}%{?dist}
 Summary:        CLI for running Open Containers
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -193,6 +193,9 @@ man/md2man-all.sh
 # install man pages
 install -d -p %{buildroot}%{_mandir}/man8
 install -p -m 0644 man/man8/*.8 %{buildroot}%{_mandir}/man8/.
+# install bash completion
+install -d -p %{buildroot}%{_sysconfdir}/bash_completion.d/
+install -p -m 0644 contrib/completions/bash/runc %{buildroot}%{_sysconfdir}/bash_completion.d/.
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -272,6 +275,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %doc MAINTAINERS_GUIDE.md PRINCIPLES.md README.md CONTRIBUTING.md
 %{_bindir}/%{name}
 %{_mandir}/man8/.
+%{_sysconfdir}/bash_completion.d/runc
 
 %if 0%{?with_devel}
 %files devel -f devel.file-list
@@ -288,6 +292,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu May 26 2016 jchaloup <jchaloup@redhat.com> - 1:0.1.1-3.git57b9972
+- Add bash completion
+  resolves: #1340119
+
 * Thu May 19 2016 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.1.1-2.gitbaf6536
 - add selinux to BUILDTAGS in addition to the default seccomp tag
 
