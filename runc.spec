@@ -15,38 +15,36 @@
 %if 0%{?with_debug}
 %global _dwz_low_mem_die_limit 0
 %else
-%global debug_package   %{nil}
+%global	debug_package	%{nil}
 %endif
 
-%global provider        github
-%global provider_tld    com
-%global project         opencontainers
-%global repo            runc
+%global	provider github
+%global	provider_tld com
+%global project opencontainers
+%global repo runc
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
-%global import_path     %{provider_prefix}
-%global commit          57b997243d52f70a78cfea5e31ccb69f37450b5a
-%global shortcommit     %(c=%{commit}; echo ${c:0:7})
+%global import_path %{provider_prefix}
+%global commit 04f275d4601ca7e5ff9460cec7f65e8dd15443ec
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
 
-Name:           %{repo}
+Name: %{repo}
 %if 0%{?fedora} || 0%{?rhel} == 6
-Epoch:          1
-%else
-Epoch:          0
+Epoch: 1
 %endif
-Version:        0.1.1
-Release:        4.git%{shortcommit}%{?dist}
-Summary:        CLI for running Open Containers
-License:        ASL 2.0
-URL:            https://%{provider_prefix}
-Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
+Version: 1.0.0
+Release: 1.rc1.git%{shortcommit}%{?dist}
+Summary: CLI for running Open Containers
+License: ASL 2.0
+URL: https://%{provider_prefix}
+Source0: https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
-ExclusiveArch:  %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 %{arm}}
+ExclusiveArch: %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 %{arm}}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
-BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
+BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 
-BuildRequires:  go-md2man
+BuildRequires: go-md2man
 
 %if ! 0%{?with_bundled}
 BuildRequires: golang(github.com/Sirupsen/logrus)
@@ -75,8 +73,8 @@ and to manage containers running under runc.
 
 %if 0%{?with_devel}
 %package devel
-Summary:       %{summary}
-BuildArch:     noarch
+Summary: %{summary}
+BuildArch: noarch
 
 %if 0%{?with_check}
 BuildRequires: golang(github.com/Sirupsen/logrus)
@@ -94,41 +92,41 @@ BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
 
-Requires:      golang(github.com/Sirupsen/logrus)
-Requires:      golang(github.com/coreos/go-systemd/dbus)
-Requires:      golang(github.com/coreos/go-systemd/util)
-Requires:      golang(github.com/docker/docker/pkg/mount)
-Requires:      golang(github.com/docker/docker/pkg/symlink)
-Requires:      golang(github.com/docker/go-units)
-Requires:      golang(github.com/godbus/dbus)
-Requires:      golang(github.com/golang/protobuf/proto)
-Requires:      golang(github.com/opencontainers/runtime-spec/specs-go)
-Requires:      golang(github.com/seccomp/libseccomp-golang)
-Requires:      golang(github.com/syndtr/gocapability/capability)
-Requires:      golang(github.com/vishvananda/netlink)
-Requires:      golang(github.com/vishvananda/netlink/nl)
+Requires: golang(github.com/Sirupsen/logrus)
+Requires: golang(github.com/coreos/go-systemd/dbus)
+Requires: golang(github.com/coreos/go-systemd/util)
+Requires: golang(github.com/docker/docker/pkg/mount)
+Requires: golang(github.com/docker/docker/pkg/symlink)
+Requires: golang(github.com/docker/go-units)
+Requires: golang(github.com/godbus/dbus)
+Requires: golang(github.com/golang/protobuf/proto)
+Requires: golang(github.com/opencontainers/runtime-spec/specs-go)
+Requires: golang(github.com/seccomp/libseccomp-golang)
+Requires: golang(github.com/syndtr/gocapability/capability)
+Requires: golang(github.com/vishvananda/netlink)
+Requires: golang(github.com/vishvananda/netlink/nl)
 
-Provides:      golang(%{import_path}/libcontainer) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/apparmor) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/cgroups) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/cgroups/fs) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/cgroups/systemd) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/configs) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/configs/validate) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/criurpc) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/devices) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/integration) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/label) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/keys) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/nsenter) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/seccomp) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/selinux) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/specconv) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/stacktrace) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/system) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/user) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/utils) = %{epoch}:%{version}-%{release}
-Provides:      golang(%{import_path}/libcontainer/xattr) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/libcontainer) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/cgroups) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/cgroups/fs) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/cgroups/systemd) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/configs) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/configs/validate) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/criurpc) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/devices) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/integration) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/keys) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/label) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/nsenter) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/seccomp) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/selinux) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/specconv) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/stacktrace) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/system) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/user) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/utils) = %{version}-%{release}
+Provides: golang(%{import_path}/libcontainer/xattr) = %{version}-%{release}
 
 %description devel
 The runc command can be used to start containers which are packaged
@@ -142,9 +140,9 @@ building other packages which use import path with
 
 %if 0%{?with_unit_test} && 0%{?with_devel}
 %package unit-test
-Summary:         Unit tests for %{name} package
+Summary: Unit tests for %{name} package
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
-BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
+BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 
 %if 0%{?with_check}
 #Here comes all BuildRequires: PACKAGE the unit tests
@@ -152,7 +150,7 @@ BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 %endif
 
 # test subpackage tests code from devel subpackage
-Requires:        %{name}-devel = %{epoch}:%{version}-%{release}
+Requires: %{name}-devel = %{epoch}:%{version}-%{release}
 
 %description unit-test
 The runc command can be used to start containers which are packaged
@@ -249,7 +247,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 # --- FAIL: TestInvalidCgroupPath (0.00s)
 #	apply_raw_test.go:16: couldn't get cgroup root: mountpoint for cgroup not found
 #	apply_raw_test.go:25: couldn't get cgroup data: mountpoint for cgroup not found
-#%%gotest %{import_path}/libcontainer/cgroups/fs
+#%%gotest %%{import_path}/libcontainer/cgroups/fs
 %gotest %{import_path}/libcontainer/configs
 %gotest %{import_path}/libcontainer/devices
 # undefined reference to `nsexec'
@@ -262,9 +260,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %gotest %{import_path}/libcontainer/selinux
 %gotest %{import_path}/libcontainer/stacktrace
 #constant 2147483648 overflows int
-#%%gotest %{import_path}/libcontainer/user
+#%%gotest %%{import_path}/libcontainer/user
 #%%gotest %%{import_path}/libcontainer/utils
-#%%gotest %{import_path}/libcontainer/xattr
+#%%gotest %%{import_path}/libcontainer/xattr
 %endif
 
 #define license tag if not already defined
@@ -292,6 +290,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Aug 24 2016 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-1.rc1.git04f275d
+- Resolves: #1342707 - bump to v1.0.0-rc1
+- built commit 04f275d
+- cosmetic changes to make rpmlint happy
+
 * Thu Jul 21 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.1.1-4.git57b9972
 - https://fedoraproject.org/wiki/Changes/golang1.7
 
