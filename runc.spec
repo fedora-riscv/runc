@@ -1,6 +1,7 @@
 %if 0%{?fedora} || 0%{?rhel} == 6
 %global with_devel 1
-%global with_bundled 0
+# TODO: package new deps
+%global with_bundled 1
 %global with_debug 1
 %global with_check 1
 %global with_unit_test 1
@@ -25,7 +26,7 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
-%global commit 04f275d4601ca7e5ff9460cec7f65e8dd15443ec
+%global commit 47ea5c75ebeb40a317d2cfa95f9c3536c00c1eea
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name: %{repo}
@@ -33,7 +34,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 1.rc1.git%{shortcommit}%{?dist}
+Release: 1.rc2.git%{shortcommit}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: https://%{provider_prefix}
@@ -291,6 +292,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Dec 21 2016 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-1.rc2.git47ea5c7
+- bump to 1.0.0 rc2
+- built commit 47ea5c7
+- build with bundled sources for now (some new dependencies need to be packaged)
+
 * Wed Aug 24 2016 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-1.rc1.git04f275d
 - Resolves: #1342707 - bump to v1.0.0-rc1
 - built commit 04f275d
