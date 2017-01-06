@@ -296,6 +296,8 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %changelog
 * Fri Jan 06 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-2.rc2.git47ea5c7
 - patch to enable seccomp
+- Pass $BUILDTAGS to the compiler in cases where we don't have to define
+gobuild for ourselves.
 - From: Nalin Dahyabhai <nalin@redhat.com>
 
 * Wed Dec 21 2016 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-1.rc2.git47ea5c7
