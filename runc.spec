@@ -34,7 +34,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 1.rc2.git%{shortcommit}%{?dist}
+Release: 2.rc2.git%{shortcommit}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: https://%{provider_prefix}
@@ -179,10 +179,11 @@ export GOPATH=$(pwd):$(pwd)/Godeps/_workspace:%{gopath}
 
 BUILDTAGS="seccomp selinux"
 %if ! 0%{?gobuild:1}
-%define gobuild(o:) go build -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -tags "$BUILDTAGS" -a -v -x %{?**};
+%define gobuild() go build -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{**};
+
 %endif
 
-%gobuild -o bin/%{name} %{import_path}
+%gobuild -tags "$BUILDTAGS" -o bin/%{name} %{import_path}
 
 %install
 install -d -p %{buildroot}%{_bindir}
@@ -293,6 +294,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jan 06 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-2.rc2.git47ea5c7
+- patch to enable seccomp
+- From: Nalin Dahyabhai <nalin@redhat.com>
+
 * Wed Dec 21 2016 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-1.rc2.git47ea5c7
 - bump to 1.0.0 rc2
 - built commit 47ea5c7
