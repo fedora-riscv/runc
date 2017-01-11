@@ -26,7 +26,7 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
-%global commit 47ea5c75ebeb40a317d2cfa95f9c3536c00c1eea
+%global commit c91b5bea4830a57eac7882d7455d59518cdf70ec
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name: %{repo}
@@ -34,11 +34,12 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 2.rc2.git%{shortcommit}%{?dist}
+Release: 3.rc2.git%{shortcommit}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: https://%{provider_prefix}
 Source0: https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
+Patch0: 0001-Set-init-processes-as-non-dumpable.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %{arm}}
@@ -294,6 +295,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Jan 11 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-3.rc2
+- Resolves: #1412238 - *CVE-2016-9962* - set init processes as non-dumpable,
+runc patch from Michael Crosby <crosbymichael@gmail.com>
+
 * Fri Jan 06 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-2.rc2.git47ea5c7
 - patch to enable seccomp
 - Pass $BUILDTAGS to the compiler in cases where we don't have to define
