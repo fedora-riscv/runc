@@ -34,7 +34,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 3.rc2.git%{shortcommit}%{?dist}
+Release: 4.rc2.git%{shortcommit}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: https://%{provider_prefix}
@@ -43,7 +43,7 @@ Patch0: 0001-Set-init-processes-as-non-dumpable.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %{arm}}
-ExclusiveArch: %{ix86} x86_64 %{arm} ppc64le %{mips} s390x
+ExclusiveArch: %{ix86} x86_64 %{arm} aarch64 ppc64le %{mips} s390x
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 
@@ -295,6 +295,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Jan 18 2017 Dennis Gilmore <dennis@ausil.us> - 1:1.0.0-4.rc2
+- enable aarch64
+
 * Wed Jan 11 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-3.rc2
 - Resolves: #1412238 - *CVE-2016-9962* - set init processes as non-dumpable,
 runc patch from Michael Crosby <crosbymichael@gmail.com>
