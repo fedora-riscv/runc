@@ -34,7 +34,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 4.rc2.git%{shortcommit}%{?dist}
+Release: 5.rc2.git%{shortcommit}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: https://%{provider_prefix}
@@ -69,6 +69,8 @@ BuildRequires: golang(github.com/syndtr/gocapability/capability)
 BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
+
+Requires: criu
 
 %description
 The runc command can be used to start containers which are packaged
@@ -295,6 +297,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Feb 01 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-5.rc2
+- depend on criu for checkpoint/restore
+
 * Wed Jan 18 2017 Dennis Gilmore <dennis@ausil.us> - 1:1.0.0-4.rc2
 - enable aarch64
 
