@@ -34,7 +34,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 5.rc2.git%{shortcommit}%{?dist}
+Release: 5.rc2.git%{shortcommit}%{?dist}.1
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: https://%{provider_prefix}
@@ -297,6 +297,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.0.0-5.rc2.gitc91b5be.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Feb 01 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-5.rc2
 - depend on criu for checkpoint/restore
 
