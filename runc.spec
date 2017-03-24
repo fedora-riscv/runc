@@ -26,27 +26,27 @@
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
-%global commit c91b5bea4830a57eac7882d7455d59518cdf70ec
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
+%global git0 https://github.com/opencontainers/runc
+%global commit0 75f8da7c889acc4509a0cf6f0d3a8f9584778375
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 %if 0%{?fedora} || 0%{?rhel} == 6
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 5.rc2.git%{shortcommit}%{?dist}.1
+Release: 6.git%{shortcommit0}%{?dist}.1
 Summary: CLI for running Open Containers
 License: ASL 2.0
-URL: https://%{provider_prefix}
-Source0: https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
-Patch0: 0001-Set-init-processes-as-non-dumpable.patch
+URL: %{git0}
+Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %{arm}}
 ExclusiveArch: %{ix86} x86_64 %{arm} aarch64 ppc64le %{mips} s390x
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
-
+BuildRequires: git
 BuildRequires: pkgconfig(libseccomp)
 BuildRequires: go-md2man
 
@@ -168,18 +168,17 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%setup -q -n %{repo}-%{commit}
+%autosetup -Sgit -n %{name}-%{commit0}
 
 %build
-mkdir -p src/github.com/opencontainers
-ln -s ../../../ src/github.com/opencontainers/runc
+mkdir -p GOPATH
+pushd GOPATH
+    mkdir -p src/%{provider}.%{provider_tld}/%{project}
+    ln -s $(dirs +1 -l) src/%{import_path}
+popd
 
-%if ! 0%{?with_bundled}
-export GOPATH=$(pwd):%{gopath}
-%else
-export GOPATH=$(pwd):$(pwd)/Godeps/_workspace:%{gopath}
-%endif
-
+pushd GOPATH/src/%{import_path}
+export GOPATH=%{gopath}:$(pwd)/GOPATH
 BUILDTAGS="seccomp selinux"
 %if ! 0%{?gobuild:1}
 %define gobuild() go build -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{**};
@@ -297,6 +296,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Mar 24 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-6.git75f8da7
+- bump to v1.0.0-rc3
+- built opencontainers/v1.0.0-rc3 commit 75f8da7
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.0.0-5.rc2.gitc91b5be.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
