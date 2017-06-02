@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 75f8da7c889acc4509a0cf6f0d3a8f9584778375
+%global commit0 639454475cb9c8b861cc599f8bcd5c8c790ae402
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
@@ -35,7 +35,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 6.git%{shortcommit0}%{?dist}.2
+Release: 7.git%{shortcommit0}%{?dist}.2
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -296,6 +296,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jun 02 2017 Antonio Murdaca <runcom@fedoraproject.org> - 1:1.0.0-7.git6394544.2
+- bump runc commit
+
 * Fri Jun 2 2017 Dan Walsh <dwalsh@redhat.com> - 1:1.0.0-6.git75f8da7
 - Bump release
 
