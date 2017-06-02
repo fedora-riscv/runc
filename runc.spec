@@ -35,7 +35,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 6.git%{shortcommit0}%{?dist}.1
+Release: 6.git%{shortcommit0}%{?dist}.2
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -296,6 +296,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jun 2 2017 Dan Walsh <dwalsh@redhat.com> - 1:1.0.0-6.git75f8da7
+- Bump release
+
 * Fri Mar 24 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-6.git75f8da7
 - bump to v1.0.0-rc3
 - built opencontainers/v1.0.0-rc3 commit 75f8da7
