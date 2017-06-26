@@ -35,7 +35,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.0
-Release: 8.git%{shortcommit0}%{?dist}.1
+Release: 9.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -43,7 +43,7 @@ Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %{arm}}
-ExclusiveArch: x86_64 %{arm} aarch64 ppc64le %{mips} s390x
+ExclusiveArch: %{ix86} x86_64 %{arm} aarch64 ppc64le %{mips} s390x
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: git
@@ -70,7 +70,9 @@ BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
 
-Requires: criu
+%ifnarch s390x
+Recommends: criu
+%endif
 
 %description
 The runc command can be used to start containers which are packaged
@@ -292,6 +294,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Jun 27 2017 Till Maas <opensource@till.name> - 1.0.0-9.git6394544
+- Just make the criu dependency optional (https://bugzilla.redhat.com/show_bug.cgi?id=1460148)
+
 * Tue Jun 27 2017 Till Maas <opensource@till.name> - 1.0.0-8.git6394544.1
 - Do not build for ix86: there is no criu on ix86
 
