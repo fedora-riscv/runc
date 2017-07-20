@@ -27,15 +27,15 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 639454475cb9c8b861cc599f8bcd5c8c790ae402
+%global commit0 c5ec25487693612aed95673800863e134785f946
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 %if 0%{?fedora} || 0%{?rhel} == 6
 Epoch: 1
 %endif
-Version: 1.0.0
-Release: 9.git%{shortcommit0}%{?dist}
+Version: 1.0.1
+Release: 1.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -294,6 +294,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu Jul 20 2017 Dan Walsh <dwalsh@redhat.name> - 1.0.1-1.gitc5ec25487
+- v1.0.0 release of runc
+
 * Tue Jun 27 2017 Till Maas <opensource@till.name> - 1.0.0-9.git6394544
 - Just make the criu dependency optional (https://bugzilla.redhat.com/show_bug.cgi?id=1460148)
 
