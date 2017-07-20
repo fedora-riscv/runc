@@ -27,15 +27,15 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 639454475cb9c8b861cc599f8bcd5c8c790ae402
+%global commit0 c5ec25487693612aed95673800863e134785f946
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 %if 0%{?fedora} || 0%{?rhel} == 6
 Epoch: 1
 %endif
-Version: 1.0.0
-Release: 7.git%{shortcommit0}%{?dist}.2
+Version: 1.0.1
+Release: 1.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -70,7 +70,9 @@ BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
 
-Requires: criu
+%ifnarch s390x
+Recommends: criu
+%endif
 
 %description
 The runc command can be used to start containers which are packaged
@@ -125,7 +127,6 @@ Provides: golang(%{import_path}/libcontainer/integration) = %{version}-%{release
 Provides: golang(%{import_path}/libcontainer/keys) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/nsenter) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/seccomp) = %{version}-%{release}
-Provides: golang(%{import_path}/libcontainer/selinux) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/specconv) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/stacktrace) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/system) = %{version}-%{release}
@@ -293,11 +294,17 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
-* Fri Jun 02 2017 Antonio Murdaca <runcom@fedoraproject.org> - 1:1.0.0-7.git6394544.2
-- bump runc commit
+* Thu Jul 20 2017 Dan Walsh <dwalsh@redhat.name> - 1.0.1-1.gitc5ec25487
+- v1.0.0 release of runc
 
-* Fri Jun 2 2017 Dan Walsh <dwalsh@redhat.com> - 1:1.0.0-6.git75f8da7
-- Bump release
+* Tue Jun 27 2017 Till Maas <opensource@till.name> - 1.0.0-9.git6394544
+- Just make the criu dependency optional (https://bugzilla.redhat.com/show_bug.cgi?id=1460148)
+
+* Tue Jun 27 2017 Till Maas <opensource@till.name> - 1.0.0-8.git6394544.1
+- Do not build for ix86: there is no criu on ix86
+
+* Fri Jun 02 2017 Antonio Murdaca <runcom@fedoraproject.org> - 1:1.0.0-7.git6394544.1
+- rebuilt
 
 * Fri Mar 24 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:1.0.0-6.git75f8da7
 - bump to v1.0.0-rc3
