@@ -185,7 +185,7 @@ BUILDTAGS="seccomp selinux"
 
 %endif
 
-%gobuild -tags "$BUILDTAGS" -o bin/%{name} %{import_path}
+%gobuild -o bin/%{name} \-tags "$BUILDTAGS" %{import_path}
 
 %install
 install -d -p %{buildroot}%{_bindir}
