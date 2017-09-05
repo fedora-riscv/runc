@@ -32,17 +32,17 @@
 
 Name: %{repo}
 %if 0%{?fedora} || 0%{?rhel} == 6
-Epoch: 1
+Epoch: 2
 %endif
-Version: 1.0.1
-Release: 4.rc5.git%{shortcommit0}%{?dist}
+Version: 1.0.0
+Release: 10.rc4.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
-#ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %{arm}}
+#ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
 ExclusiveArch: %{ix86} x86_64 %{arm} aarch64 ppc64le %{mips} s390x
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
@@ -179,17 +179,12 @@ popd
 
 pushd GOPATH/src/%{import_path}
 export GOPATH=%{gopath}:$(pwd)/GOPATH
-BUILDTAGS="seccomp selinux"
-%if ! 0%{?gobuild:1}
-%define gobuild() go build -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{**};
 
-%endif
-
-%gobuild -o bin/%{name} \-tags "$BUILDTAGS" %{import_path}
+make BUILDTAGS="seccomp selinux" all
 
 %install
 install -d -p %{buildroot}%{_bindir}
-install -p -m 755 bin/%{name} %{buildroot}%{_bindir}
+install -p -m 755 %{name} %{buildroot}%{_bindir}
 
 # generate man pages
 man/md2man-all.sh
@@ -294,6 +289,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Sep 5 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-10.rc4.gitaea4f21
+- bump Epoch to 2 since bump to v1.0.1 was in error
+- bump to v1.0.0-rc4
+- built commit aea4f21
+
 * Tue Sep 5 2017 Dan Walsh <dwalsh@redhat.name> - 1.0.1-4.rc.gitaea4f21
 - Rebuilt from master, with requierements needed for CRI-O
 
