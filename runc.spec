@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 c5ec25487693612aed95673800863e134785f946
+%global commit0 aea4f21eec795d9f5b7c7d514f568c08d58b8e58
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
@@ -35,7 +35,7 @@ Name: %{repo}
 Epoch: 1
 %endif
 Version: 1.0.1
-Release: 1.git%{shortcommit0}%{?dist}
+Release: 4.rc5.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -185,7 +185,7 @@ BUILDTAGS="seccomp selinux"
 
 %endif
 
-%gobuild -tags "$BUILDTAGS" -o bin/%{name} %{import_path}
+%gobuild -o bin/%{name} \-tags "$BUILDTAGS" %{import_path}
 
 %install
 install -d -p %{buildroot}%{_bindir}
@@ -294,8 +294,17 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Sep 5 2017 Dan Walsh <dwalsh@redhat.name> - 1.0.1-4.rc.gitaea4f21
+- Rebuilt from master, with requierements needed for CRI-O
+
+* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.0.1-3.gitc5ec254
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.0.1-2.gitc5ec254
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Thu Jul 20 2017 Dan Walsh <dwalsh@redhat.name> - 1.0.1-1.gitc5ec25487
-- v1.0.0 release of runc
+- v1.0.0-rc5 release of runc
 
 * Tue Jun 27 2017 Till Maas <opensource@till.name> - 1.0.0-9.git6394544
 - Just make the criu dependency optional (https://bugzilla.redhat.com/show_bug.cgi?id=1460148)
