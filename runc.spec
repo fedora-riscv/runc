@@ -70,8 +70,13 @@ BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
 
+
+%if ! 0%{?centos}
 %ifnarch s390x
 Recommends: criu
+%endif
+%else
+Requires: criu
 %endif
 
 %description
