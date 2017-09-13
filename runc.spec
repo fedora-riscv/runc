@@ -1,9 +1,8 @@
 %if 0%{?fedora} || 0%{?rhel} == 6
-%global with_devel 1
-# TODO: package new deps
+%global with_devel 0
 %global with_bundled 1
 %global with_debug 1
-%global with_check 1
+%global with_check 0
 %global with_unit_test 1
 %else
 %global with_devel 0
@@ -35,7 +34,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 10.rc4.git%{shortcommit0}%{?dist}
+Release: 11.rc4.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -294,6 +293,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Sep 12 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-11.rc4.gitaea4f21
+- disable devel package and %%check - makes life easier for module building
+
 * Tue Sep 5 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-10.rc4.gitaea4f21
 - bump Epoch to 2 since bump to v1.0.1 was in error
 - bump to v1.0.0-rc4
