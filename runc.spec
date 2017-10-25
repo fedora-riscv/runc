@@ -34,7 +34,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 11.rc4.git%{shortcommit0}%{?dist}
+Release: 12.rc4.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -68,6 +68,7 @@ BuildRequires: golang(github.com/syndtr/gocapability/capability)
 BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
+Requires(pre): container-selinux >= 2:2.2-2
 
 
 %if ! 0%{?centos}
@@ -293,6 +294,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Oct 25 2017 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-12.rc4.gitaea4f21
+- Add container-selinux prerequires to make sure runc is labeled correctly
+
 * Tue Sep 12 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-11.rc4.gitaea4f21
 - disable devel package and %%check - makes life easier for module building
 
