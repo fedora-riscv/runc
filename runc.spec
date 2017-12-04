@@ -45,7 +45,6 @@ Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 ExclusiveArch: %{ix86} x86_64 %{arm} aarch64 ppc64le %{mips} s390x
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
-BuildRequires: git
 BuildRequires: pkgconfig(libseccomp)
 BuildRequires: go-md2man
 
@@ -173,7 +172,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%autosetup -Sgit -n %{name}-%{commit0}
+%setup -q -n %{name}-%{commit0}
 
 %build
 mkdir -p GOPATH
