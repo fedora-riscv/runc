@@ -15,18 +15,18 @@
 %if 0%{?with_debug}
 %global _dwz_low_mem_die_limit 0
 %else
-%global	debug_package	%{nil}
+%global debug_package   %{nil}
 %endif
 
-%global	provider github
-%global	provider_tld com
+%global provider github
+%global provider_tld com
 %global project opencontainers
 %global repo runc
 # https://github.com/opencontainers/runc
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 db093f621f4e6d40feafbe6d7b89a9bee6f6ff85
+%global commit0 e6516b3d5dc780cb57a976013c242a9a93052543
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
@@ -34,7 +34,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 14.rc4.git%{shortcommit0}%{?dist}
+Release: 15.rc4.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -250,8 +250,8 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 #%%gotest %%{import_path}/libcontainer
 #%gotest %{import_path}/libcontainer/cgroups
 # --- FAIL: TestInvalidCgroupPath (0.00s)
-#	apply_raw_test.go:16: couldn't get cgroup root: mountpoint for cgroup not found
-#	apply_raw_test.go:25: couldn't get cgroup data: mountpoint for cgroup not found
+#       apply_raw_test.go:16: couldn't get cgroup root: mountpoint for cgroup not found
+#       apply_raw_test.go:25: couldn't get cgroup data: mountpoint for cgroup not found
 #%%gotest %%{import_path}/libcontainer/cgroups/fs
 #%gotest %{import_path}/libcontainer/configs
 #%gotest %{import_path}/libcontainer/devices
@@ -293,6 +293,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Dec 18 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-15.rc4.gite6516b3
+- built commit e6516b3
+
 * Fri Dec 15 2017 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-14.rc4.gitdb093f6
 - Lots of fixes for libcontainer
 - support unbindable,runbindable for rootfs propagation
