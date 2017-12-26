@@ -1,14 +1,12 @@
-%if 0%{?fedora} || 0%{?rhel} == 6
 %global with_devel 0
 %global with_bundled 1
-%global with_debug 1
 %global with_check 0
+
+%if 0%{?fedora} || 0%{?rhel} == 6
+%global with_debug 1
 %global with_unit_test 1
 %else
-%global with_devel 0
-%global with_bundled 1
 %global with_debug 0
-%global with_check 0
 %global with_unit_test 0
 %endif
 
@@ -34,7 +32,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 15.rc4.git%{shortcommit0}%{?dist}
+Release: 16.rc4.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -186,6 +184,8 @@ export GOPATH=%{gopath}:$(pwd)/GOPATH
 
 make BUILDTAGS="seccomp selinux" all
 
+sed -i '/\#\!\/bin\/bash/d' contrib/completions/bash/%{name}
+
 %install
 install -d -p %{buildroot}%{_bindir}
 install -p -m 755 %{name} %{buildroot}%{_bindir}
@@ -197,8 +197,8 @@ man/md2man-all.sh
 install -d -p %{buildroot}%{_mandir}/man8
 install -p -m 0644 man/man8/*.8 %{buildroot}%{_mandir}/man8/.
 # install bash completion
-install -d -p %{buildroot}%{_sysconfdir}/bash_completion.d/
-install -p -m 0644 contrib/completions/bash/runc %{buildroot}%{_sysconfdir}/bash_completion.d/.
+install -d -p %{buildroot}%{_datadir}/bash-completion/completions
+install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash-completion/completions
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -248,20 +248,20 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 
 # FAIL: TestFactoryNewTmpfs (0.00s), factory_linux_test.go:59: operation not permitted
 #%%gotest %%{import_path}/libcontainer
-#%gotest %{import_path}/libcontainer/cgroups
+#%%gotest %%{import_path}/libcontainer/cgroups
 # --- FAIL: TestInvalidCgroupPath (0.00s)
 #       apply_raw_test.go:16: couldn't get cgroup root: mountpoint for cgroup not found
 #       apply_raw_test.go:25: couldn't get cgroup data: mountpoint for cgroup not found
 #%%gotest %%{import_path}/libcontainer/cgroups/fs
-#%gotest %{import_path}/libcontainer/configs
-#%gotest %{import_path}/libcontainer/devices
+#%%gotest %%{import_path}/libcontainer/configs
+#%%gotest %%{import_path}/libcontainer/devices
 # undefined reference to `nsexec'
 #%%gotest %%{import_path}/libcontainer/integration
 # Unable to create tstEth link: operation not permitted
 #%%gotest %%{import_path}/libcontainer/netlink
 # undefined reference to `nsexec'
 #%%gotest %%{import_path}/libcontainer/nsenter
-#%gotest %{import_path}/libcontainer/stacktrace
+#%%gotest %%{import_path}/libcontainer/stacktrace
 #constant 2147483648 overflows int
 #%%gotest %%{import_path}/libcontainer/user
 #%%gotest %%{import_path}/libcontainer/utils
@@ -275,8 +275,8 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %license LICENSE
 %doc MAINTAINERS_GUIDE.md PRINCIPLES.md README.md CONTRIBUTING.md
 %{_bindir}/%{name}
-%{_mandir}/man8/.
-%{_sysconfdir}/bash_completion.d/runc
+%{_mandir}/man8/%{name}*
+%{_datadir}/bash-completion/completions/%{name}
 
 %if 0%{?with_devel}
 %files devel -f devel.file-list
@@ -293,6 +293,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Dec 26 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-16.rc4.gite6516b3
+- install bash completion to correct location
+- remove shebang from bash completion gh#1679
+- correct rpmlint issues
+
 * Mon Dec 18 2017 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-15.rc4.gite6516b3
 - built commit e6516b3
 
