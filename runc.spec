@@ -24,7 +24,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 9f9c96235cc97674e935002fc3d78361b696a69e
+%global commit0 4bb1fe4ace1a32d3676bb98f5d3b6a4e32bf6c58
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
@@ -32,7 +32,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 17.rc4.git%{shortcommit0}%{?dist}
+Release: 18.rc5.git%{shortcommit0}%{?dist}.1
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -296,6 +296,12 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Feb 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-18.rc5.git4bb1fe4
+- release v1.0.0~rc5
+
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.0-17.rc4.git9f9c962.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Wed Jan 24 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-17.rc4.git9f9c962
 - Bump to the latest from upstream
 
