@@ -32,7 +32,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 19.rc5.git%{shortcommit0}%{?dist}
+Release: 20.rc5.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -296,6 +296,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Mar 12 2018 Peter Robinson <pbrobinson@fedoraproject.org> 2:1.0.0-20.rc5.git4bb1fe4
+- Rebuild for aarch64 install issue
+
 * Tue Feb 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-19.rc5.git4bb1fe4
 - release v1.0.0~rc5
 
