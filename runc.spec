@@ -24,7 +24,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 4bb1fe4ace1a32d3676bb98f5d3b6a4e32bf6c58
+%global commit0 cc4307ab6643668ce5abc6b524e1764a54c32550
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
@@ -32,7 +32,7 @@ Name: %{repo}
 Epoch: 2
 %endif
 Version: 1.0.0
-Release: 20.git%{shortcommit0}%{?dist}
+Release: 21.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -296,6 +296,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Apr 09 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-21.gitcc4307a
+- autobuilt commit cc4307a
+
 * Mon Mar 12 2018 Peter Robinson <pbrobinson@fedoraproject.org> 2:1.0.0-20.rc5.git4bb1fe4
 - Rebuild for aarch64 install issue
 
