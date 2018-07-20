@@ -1,16 +1,16 @@
 %global with_devel 0
 %global with_bundled 1
 %global with_check 0
-
-%if 0%{?fedora} || 0%{?rhel} == 6
-%global with_debug 1
-%global with_unit_test 1
-%else
-%global with_debug 0
 %global with_unit_test 0
+
+%if 0%{?fedora} > 28
+%global with_debug 0
+%else
+%global with_debug 1
 %endif
 
 %if 0%{?with_debug}
+%global _find_debuginfo_dwz_opts %{nil}
 %global _dwz_low_mem_die_limit 0
 %else
 %global debug_package   %{nil}
@@ -28,11 +28,9 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
-%if 0%{?fedora} || 0%{?rhel} == 6
 Epoch: 2
-%endif
 Version: 1.0.0
-Release: 42.dev.git%{shortcommit0}%{?dist}
+Release: 43.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -68,13 +66,8 @@ BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
 Requires(pre): container-selinux >= 2:2.2-2
 
-
-%if ! 0%{?centos}
 %ifnarch s390x
 Recommends: criu
-%endif
-%else
-Requires: criu
 %endif
 
 %description
@@ -294,6 +287,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jul 20 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-43.dev.git21ac086
+- Resolves: #1606281 - temp disable debuginfo for rawhide
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.0-42.dev.git21ac086
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
