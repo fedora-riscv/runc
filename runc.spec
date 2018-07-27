@@ -30,11 +30,12 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 45.dev.git%{shortcommit0}%{?dist}
+Release: 46.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+Patch0: 1807.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
@@ -164,7 +165,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%setup -q -n %{name}-%{commit0}
+%autosetup -Sgit -n %{name}-%{commit0}
 
 %build
 mkdir -p GOPATH
@@ -287,6 +288,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jul 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-45.dev.gitb4e2ecb
+- Add patch https://github.com/opencontainers/runc/pull/1807 to allow
+- runc and podman to work with sd_notify
+
 * Thu Jul 26 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-45.dev.gitb4e2ecb
 - autobuilt b4e2ecb
 
