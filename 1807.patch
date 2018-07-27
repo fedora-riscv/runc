@@ -1,0 +1,200 @@
+From ecf53c23545092019602578583031c28fde4d2a1 Mon Sep 17 00:00:00 2001
+From: Giuseppe Scrivano <gscrivan@redhat.com>
+Date: Fri, 25 May 2018 18:04:06 +0200
+Subject: [PATCH] sd-notify: do not hang when NOTIFY_SOCKET is used with create
+
+if NOTIFY_SOCKET is used, do not block the main runc process waiting
+for events on the notify socket.  Change the logic to create a new
+process that monitors exclusively the notify socket until an event is
+received.
+
+Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
+---
+ init.go          |  12 +++++++
+ notify_socket.go | 101 ++++++++++++++++++++++++++++++++++++++++++++++---------
+ signals.go       |   5 +--
+ 3 files changed, 99 insertions(+), 19 deletions(-)
+
+diff --git a/init.go b/init.go
+index c8f453192..6a3d9e91c 100644
+--- a/init.go
++++ b/init.go
+@@ -20,6 +20,18 @@ var initCommand = cli.Command{
+ 	Name:  "init",
+ 	Usage: `initialize the namespaces and launch the process (do not call it outside of runc)`,
+ 	Action: func(context *cli.Context) error {
++		// If NOTIFY_SOCKET is used create a new process that stays around
++		// so to not block "runc start".  It will automatically exits when the
++		// container notifies that it is ready, or when the container is deleted
++		if os.Getenv("_NOTIFY_SOCKET_FD") != "" {
++			fd := os.Getenv("_NOTIFY_SOCKET_FD")
++			pid := os.Getenv("_NOTIFY_SOCKET_PID")
++			hostNotifySocket := os.Getenv("_NOTIFY_SOCKET_HOST")
++			notifySocketPath := os.Getenv("_NOTIFY_SOCKET_PATH")
++			notifySocketInit(fd, pid, hostNotifySocket, notifySocketPath)
++			os.Exit(0)
++		}
++
+ 		factory, _ := libcontainer.New("")
+ 		if err := factory.StartInitialization(); err != nil {
+ 			// as the error is sent back to the parent there is no need to log
+diff --git a/notify_socket.go b/notify_socket.go
+index cd6c0a989..e04e9d660 100644
+--- a/notify_socket.go
++++ b/notify_socket.go
+@@ -6,10 +6,13 @@ import (
+ 	"bytes"
+ 	"fmt"
+ 	"net"
++	"os"
++	"os/exec"
+ 	"path/filepath"
++	"strconv"
++	"time"
+ 
+ 	"github.com/opencontainers/runtime-spec/specs-go"
+-
+ 	"github.com/sirupsen/logrus"
+ 	"github.com/urfave/cli"
+ )
+@@ -64,24 +67,94 @@ func (s *notifySocket) setupSocket() error {
+ 	return nil
+ }
+ 
++func (notifySocket *notifySocket) notifyNewPid(pid int) {
++	notifySocketHostAddr := net.UnixAddr{Name: notifySocket.host, Net: "unixgram"}
++	client, err := net.DialUnix("unixgram", nil, &notifySocketHostAddr)
++	if err != nil {
++		return
++	}
++	newPid := fmt.Sprintf("MAINPID=%d\n", pid)
++	client.Write([]byte(newPid))
++}
++
+ // pid1 must be set only with -d, as it is used to set the new process as the main process
+ // for the service in systemd
+ func (notifySocket *notifySocket) run(pid1 int) {
+-	buf := make([]byte, 512)
+-	notifySocketHostAddr := net.UnixAddr{Name: notifySocket.host, Net: "unixgram"}
+-	client, err := net.DialUnix("unixgram", nil, &notifySocketHostAddr)
++	file, err := notifySocket.socket.File()
+ 	if err != nil {
+ 		logrus.Error(err)
+ 		return
+ 	}
+-	for {
+-		r, err := notifySocket.socket.Read(buf)
+-		if err != nil {
+-			break
++	defer file.Close()
++	defer notifySocket.socket.Close()
++
++	cmd := exec.Command("/proc/self/exe", "init")
++	cmd.ExtraFiles = []*os.File{file}
++	cmd.Env = append(cmd.Env, "_NOTIFY_SOCKET_FD=3",
++		fmt.Sprintf("_NOTIFY_SOCKET_PID=%d", pid1),
++		fmt.Sprintf("_NOTIFY_SOCKET_HOST=%s", notifySocket.host),
++		fmt.Sprintf("_NOTIFY_SOCKET_PATH=%s", notifySocket.socketPath))
++
++	if err := cmd.Start(); err != nil {
++		logrus.Fatal(err)
++	}
++	notifySocket.notifyNewPid(cmd.Process.Pid)
++	cmd.Process.Release()
++}
++
++func notifySocketInit(envFd string, envPid string, notifySocketHost string, notifySocketPath string) {
++	intFd, err := strconv.Atoi(envFd)
++	if err != nil {
++		return
++	}
++	pid1, err := strconv.Atoi(envPid)
++	if err != nil {
++		return
++	}
++
++	file := os.NewFile(uintptr(intFd), "unixgram")
++	defer file.Close()
++
++	fileChan := make(chan []byte)
++	exitChan := make(chan bool)
++
++	go func() {
++		for {
++			buf := make([]byte, 512)
++			r, err := file.Read(buf)
++			if err != nil {
++				return
++			}
++			fileChan <- buf[0:r]
+ 		}
+-		var out bytes.Buffer
+-		for _, line := range bytes.Split(buf[0:r], []byte{'\n'}) {
+-			if bytes.HasPrefix(line, []byte("READY=")) {
++	}()
++	go func() {
++		for {
++			if _, err := os.Stat(notifySocketPath); os.IsNotExist(err) {
++				exitChan <- true
++				return
++			}
++			time.Sleep(time.Second)
++		}
++	}()
++
++	notifySocketHostAddr := net.UnixAddr{Name: notifySocketHost, Net: "unixgram"}
++	client, err := net.DialUnix("unixgram", nil, &notifySocketHostAddr)
++	if err != nil {
++		return
++	}
++
++	for {
++		select {
++		case <-exitChan:
++			return
++		case b := <-fileChan:
++			for _, line := range bytes.Split(b, []byte{'\n'}) {
++				if !bytes.HasPrefix(line, []byte("READY=")) {
++					continue
++				}
++
++				var out bytes.Buffer
+ 				_, err = out.Write(line)
+ 				if err != nil {
+ 					return
+@@ -98,10 +171,8 @@ func (notifySocket *notifySocket) run(pid1 int) {
+ 				}
+ 
+ 				// now we can inform systemd to use pid1 as the pid to monitor
+-				if pid1 > 0 {
+-					newPid := fmt.Sprintf("MAINPID=%d\n", pid1)
+-					client.Write([]byte(newPid))
+-				}
++				newPid := fmt.Sprintf("MAINPID=%d\n", pid1)
++				client.Write([]byte(newPid))
+ 				return
+ 			}
+ 		}
+diff --git a/signals.go b/signals.go
+index 1811de837..d0988cb39 100644
+--- a/signals.go
++++ b/signals.go
+@@ -70,7 +70,7 @@ func (h *signalHandler) forward(process *libcontainer.Process, tty *tty, detach
+ 			h.notifySocket.run(pid1)
+ 			return 0, nil
+ 		} else {
+-			go h.notifySocket.run(0)
++			h.notifySocket.run(os.Getpid())
+ 		}
+ 	}
+ 
+@@ -98,9 +98,6 @@ func (h *signalHandler) forward(process *libcontainer.Process, tty *tty, detach
+ 					// status because we must ensure that any of the go specific process
+ 					// fun such as flushing pipes are complete before we return.
+ 					process.Wait()
+-					if h.notifySocket != nil {
+-						h.notifySocket.Close()
+-					}
+ 					return e.status, nil
+ 				}
+ 			}
