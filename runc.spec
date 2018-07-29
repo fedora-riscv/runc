@@ -24,13 +24,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 b4e2ecb452d9ee4381137cc0a7e6715b96bed6de
+%global commit0 beadf0ece520a01beb22203e2b39b4c3d8a5cbe7
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 46.dev.git%{shortcommit0}%{?dist}
+Release: 47.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -288,6 +288,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Sun Jul 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-47.dev.gitbeadf0e
+- autobuilt beadf0e
+
 * Fri Jul 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-45.dev.gitb4e2ecb
 - Add patch https://github.com/opencontainers/runc/pull/1807 to allow
 - runc and podman to work with sd_notify
