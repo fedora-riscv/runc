@@ -30,7 +30,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 47.dev.git%{shortcommit0}%{?dist}
+Release: 48.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -288,6 +288,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Jul 31 2018 Florian Weimer <fweimer@redhat.com> - 2:1.0.0-48.dev.gitbeadf0e
+- Rebuild with fixed binutils
+
 * Sun Jul 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-47.dev.gitbeadf0e
 - autobuilt beadf0e
 
