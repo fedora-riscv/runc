@@ -24,13 +24,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 beadf0ece520a01beb22203e2b39b4c3d8a5cbe7
+%global commit0 4056a41f58e35fd428d517de1326bc465aa6a461
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 48.dev.git%{shortcommit0}%{?dist}
+Release: 49.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -288,13 +288,16 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Aug 7 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-49.dev.gitb4056a4
+- Pass GOMAXPROCS to init processes
+
 * Tue Jul 31 2018 Florian Weimer <fweimer@redhat.com> - 2:1.0.0-48.dev.gitbeadf0e
 - Rebuild with fixed binutils
 
 * Sun Jul 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-47.dev.gitbeadf0e
 - autobuilt beadf0e
 
-* Fri Jul 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-45.dev.gitb4e2ecb
+* Fri Jul 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-46.dev.gitb4e2ecb
 - Add patch https://github.com/opencontainers/runc/pull/1807 to allow
 - runc and podman to work with sd_notify
 
