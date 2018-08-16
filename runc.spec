@@ -1,16 +1,16 @@
 %global with_devel 0
 %global with_bundled 1
 %global with_check 0
-
-%if 0%{?fedora} || 0%{?rhel} == 6
-%global with_debug 1
-%global with_unit_test 1
-%else
-%global with_debug 0
 %global with_unit_test 0
+
+%if 0%{?fedora} > 28
+%global with_debug 0
+%else
+%global with_debug 1
 %endif
 
 %if 0%{?with_debug}
+%global _find_debuginfo_dwz_opts %{nil}
 %global _dwz_low_mem_die_limit 0
 %else
 %global debug_package   %{nil}
@@ -24,19 +24,18 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 ad0f5255060d36872be04de22f8731f38ef2d7b1
+%global commit0 20aff4f0488c6d4b8df4d85b4f63f1f704c11abd
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
-%if 0%{?fedora} || 0%{?rhel} == 6
 Epoch: 2
-%endif
 Version: 1.0.0
-Release: 36.git%{shortcommit0}%{?dist}
+Release: 50.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+Patch0: 1807.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
@@ -68,13 +67,8 @@ BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
 Requires(pre): container-selinux >= 2:2.2-2
 
-
-%if ! 0%{?centos}
 %ifnarch s390x
 Recommends: criu
-%endif
-%else
-Requires: criu
 %endif
 
 %description
@@ -171,7 +165,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%setup -q -n %{name}-%{commit0}
+%autosetup -Sgit -n %{name}-%{commit0}
 
 %build
 mkdir -p GOPATH
@@ -294,6 +288,49 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Aug 15 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-50.dev.git20aff4f
+- Revert minor cleanup patch
+
+* Tue Aug 7 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-49.dev.gitb4056a4
+- Pass GOMAXPROCS to init processes
+
+* Tue Jul 31 2018 Florian Weimer <fweimer@redhat.com> - 2:1.0.0-48.dev.gitbeadf0e
+- Rebuild with fixed binutils
+
+* Sun Jul 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-47.dev.gitbeadf0e
+- autobuilt beadf0e
+
+* Fri Jul 27 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-46.dev.gitb4e2ecb
+- Add patch https://github.com/opencontainers/runc/pull/1807 to allow
+- runc and podman to work with sd_notify
+
+* Thu Jul 26 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-45.dev.gitb4e2ecb
+- autobuilt b4e2ecb
+
+* Wed Jul 25 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-44.dev.gitbc14672
+- autobuilt bc14672
+
+* Fri Jul 20 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-43.dev.git21ac086
+- Resolves: #1606281 - temp disable debuginfo for rawhide
+
+* Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.0-42.dev.git21ac086
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
+* Wed Jul 11 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-41.dev.git21ac086
+- autobuilt 21ac086
+
+* Fri Jul 06 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-40.git45e08f6
+- autobuilt 45e08f6
+
+* Tue Jun 26 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-39.git2c632d1
+- autobuilt 2c632d1
+
+* Mon Jun 25 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-38.git3ccfa2f
+- autobuilt 3ccfa2f
+
+* Sun Jun 24 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-37.git0154d05
+- autobuilt 0154d05
+
 * Sat Jun 16 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-36.gitad0f525
 - autobuilt ad0f525
 
