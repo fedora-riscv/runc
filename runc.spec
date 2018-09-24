@@ -2,12 +2,7 @@
 %global with_bundled 1
 %global with_check 0
 %global with_unit_test 0
-
-%if 0%{?fedora} > 28
-%global with_debug 0
-%else
 %global with_debug 1
-%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
@@ -24,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 70ca035aa6ecfc496e13365fdef20383408501ba
+%global commit0 00dc70017d222b178a002ed30e9321b12647af2d
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 53.dev.git%{shortcommit0}%{?dist}
+Release: 54.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -289,6 +284,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Sep 24 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-54.dev.git00dc700
+- built commit 00dc700
+- rebase 1807.patch
+- enable debuginfo for all versions
+
 * Fri Sep 07 2018 baude <bbaude@redhat.com> - 2:1.0.0-53.dev.git70ca035
 - Add BuildRequires git
 
