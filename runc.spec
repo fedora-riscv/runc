@@ -2,12 +2,7 @@
 %global with_bundled 1
 %global with_check 0
 %global with_unit_test 0
-
-%if 0%{?fedora} > 28
-%global with_debug 0
-%else
 %global with_debug 1
-%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
@@ -24,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 fdd8055cddb41734e451980e91f8834963925089
+%global commit0 578fe65e4fb86b95cc67b304d99d799f976dc40c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 51.dev.git%{shortcommit0}%{?dist}
+Release: 54.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -45,6 +40,7 @@ BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: pkgconfig(libseccomp)
 BuildRequires: go-md2man
 BuildRequires: make
+BuildRequires: git
 
 %if ! 0%{?with_bundled}
 BuildRequires: golang(github.com/Sirupsen/logrus)
@@ -288,6 +284,20 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Sep 24 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-54.dev.git00dc700
+- built commit 00dc700
+- rebase 1807.patch
+- enable debuginfo for all versions
+
+* Sun Sep 23 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-54.dev.gitfdd8055
+- built commit 578fe65e4fb86b95cc67b304d99d799f976dc40c
+1
+* Fri Sep 07 2018 baude <bbaude@redhat.com> - 2:1.0.0-53.dev.git70ca035
+- Add BuildRequires git
+
+* Thu Sep 06 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-52.dev.git70ca035
+- built commit 70ca035
+
 * Fri Aug 31 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-51.dev.gitfdd8055
 - Fix handling of tmpcopyup
 
