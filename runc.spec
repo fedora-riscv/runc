@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 54.dev.git%{shortcommit0}%{?dist}
+Release: 55.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,14 +284,15 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Sep 25 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-55.dev.gitfdd8055
+- built commit 578fe65e4fb86b95cc67b304d99d799f976dc40c
+1
+
 * Mon Sep 24 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-54.dev.git00dc700
 - built commit 00dc700
 - rebase 1807.patch
 - enable debuginfo for all versions
 
-* Sun Sep 23 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-54.dev.gitfdd8055
-- built commit 578fe65e4fb86b95cc67b304d99d799f976dc40c
-1
 * Fri Sep 07 2018 baude <bbaude@redhat.com> - 2:1.0.0-53.dev.git70ca035
 - Add BuildRequires git
 
