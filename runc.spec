@@ -19,7 +19,11 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
+<<<<<<< HEAD
 %global commit0 578fe65e4fb86b95cc67b304d99d799f976dc40c
+=======
+%global commit0 00dc70017d222b178a002ed30e9321b12647af2d
+>>>>>>> 895ba9a01f7cec9b826b33ef87a74c3952a4da7d
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
@@ -289,9 +293,12 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 - rebase 1807.patch
 - enable debuginfo for all versions
 
+<<<<<<< HEAD
 * Sun Sep 23 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-54.dev.gitfdd8055
 - built commit 578fe65e4fb86b95cc67b304d99d799f976dc40c
 1
+=======
+>>>>>>> 895ba9a01f7cec9b826b33ef87a74c3952a4da7d
 * Fri Sep 07 2018 baude <bbaude@redhat.com> - 2:1.0.0-53.dev.git70ca035
 - Add BuildRequires git
 
