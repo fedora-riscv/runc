@@ -1,4 +1,4 @@
-From cd9b959b34c183cf6cd031af678c4ec66b765080 Mon Sep 17 00:00:00 2001
+From a52f7bfdea91550eee25ee5af1efed4bf1def869 Mon Sep 17 00:00:00 2001
 From: Giuseppe Scrivano <gscrivan@redhat.com>
 Date: Fri, 25 May 2018 18:04:06 +0200
 Subject: [PATCH] sd-notify: do not hang when NOTIFY_SOCKET is used with create
@@ -11,13 +11,13 @@ still accessible from the container.
 Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
 ---
  notify_socket.go | 113 ++++++++++++++++++++++++++++++++++-------------
- signals.go       |   5 +--
+ signals.go       |   4 +-
  start.go         |  13 +++++-
  utils_linux.go   |  12 ++++-
- 4 files changed, 106 insertions(+), 37 deletions(-)
+ 4 files changed, 106 insertions(+), 36 deletions(-)
 
 diff --git a/notify_socket.go b/notify_socket.go
-index cd6c0a98..7fbd2e73 100644
+index b890b5b1c..286ce1ddd 100644
 --- a/notify_socket.go
 +++ b/notify_socket.go
 @@ -6,11 +6,14 @@ import (
@@ -52,7 +52,7 @@ index cd6c0a98..7fbd2e73 100644
  	}
  
  	return notifySocket
-@@ -43,13 +46,19 @@ func (ns *notifySocket) Close() error {
+@@ -43,13 +46,19 @@ func (s *notifySocket) Close() error {
  
  // If systemd is supporting sd_notify protocol, this function will add support
  // for sd_notify protocol from within the container.
@@ -82,9 +82,9 @@ index cd6c0a98..7fbd2e73 100644
  
 -// pid1 must be set only with -d, as it is used to set the new process as the main process
 -// for the service in systemd
--func (notifySocket *notifySocket) run(pid1 int) {
+-func (s *notifySocket) run(pid1 int) {
 -	buf := make([]byte, 512)
--	notifySocketHostAddr := net.UnixAddr{Name: notifySocket.host, Net: "unixgram"}
+-	notifySocketHostAddr := net.UnixAddr{Name: s.host, Net: "unixgram"}
 +func (s *notifySocket) setupSocketDirectory() error {
 +	return os.Mkdir(path.Dir(s.socketPath), 0755)
 +}
@@ -121,7 +121,7 @@ index cd6c0a98..7fbd2e73 100644
 +		return err
  	}
 -	for {
--		r, err := notifySocket.socket.Read(buf)
+-		r, err := s.socket.Read(buf)
 -		if err != nil {
 -			break
 +
@@ -189,19 +189,18 @@ index cd6c0a98..7fbd2e73 100644
  		}
  	}
 diff --git a/signals.go b/signals.go
-index 1811de83..d0988cb3 100644
+index b67f65a03..dd25e094c 100644
 --- a/signals.go
 +++ b/signals.go
-@@ -70,7 +70,7 @@ func (h *signalHandler) forward(process *libcontainer.Process, tty *tty, detach
+@@ -70,6 +70,7 @@ func (h *signalHandler) forward(process *libcontainer.Process, tty *tty, detach
  			h.notifySocket.run(pid1)
  			return 0, nil
- 		} else {
--			go h.notifySocket.run(0)
-+			h.notifySocket.run(os.Getpid())
  		}
++		h.notifySocket.run(os.Getpid())
+ 		go h.notifySocket.run(0)
  	}
  
-@@ -98,9 +98,6 @@ func (h *signalHandler) forward(process *libcontainer.Process, tty *tty, detach
+@@ -97,9 +98,6 @@ func (h *signalHandler) forward(process *libcontainer.Process, tty *tty, detach
  					// status because we must ensure that any of the go specific process
  					// fun such as flushing pipes are complete before we return.
  					process.Wait()
@@ -212,7 +211,7 @@ index 1811de83..d0988cb3 100644
  				}
  			}
 diff --git a/start.go b/start.go
-index 2bb698b2..3a1769a4 100644
+index 2bb698b20..3a1769a43 100644
 --- a/start.go
 +++ b/start.go
 @@ -3,6 +3,7 @@ package main
@@ -243,10 +242,10 @@ index 2bb698b2..3a1769a4 100644
  			return errors.New("cannot start a container that has stopped")
  		case libcontainer.Running:
 diff --git a/utils_linux.go b/utils_linux.go
-index c6a34897..77423f67 100644
+index a37b1c3df..4921bd94b 100644
 --- a/utils_linux.go
 +++ b/utils_linux.go
-@@ -420,7 +420,9 @@ func startContainer(context *cli.Context, spec *specs.Spec, action CtAct, criuOp
+@@ -401,7 +401,9 @@ func startContainer(context *cli.Context, spec *specs.Spec, action CtAct, criuOp
  
  	notifySocket := newNotifySocket(context, os.Getenv("NOTIFY_SOCKET"), id)
  	if notifySocket != nil {
@@ -257,7 +256,7 @@ index c6a34897..77423f67 100644
  	}
  
  	container, err := createContainer(context, id, spec)
-@@ -429,10 +431,16 @@ func startContainer(context *cli.Context, spec *specs.Spec, action CtAct, criuOp
+@@ -410,10 +412,16 @@ func startContainer(context *cli.Context, spec *specs.Spec, action CtAct, criuOp
  	}
  
  	if notifySocket != nil {
@@ -275,6 +274,3 @@ index c6a34897..77423f67 100644
  	}
  
  	// Support on-demand socket activation by passing file descriptors into the container init process.
--- 
-2.17.1
-
