@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 ccb5efd37fb7c86364786e9137e22948751de7ed
+%global commit0 bbb17efcb4c0ab986407812a31ba333a7450064c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 59.dev.git%{shortcommit0}%{?dist}
+Release: 66.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Dec 21 2018 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-66.dev.gitbbb17ef
+- UPdate to latest upstream for CRIU Fixes
+
 * Sat Nov 24 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-59.dev.gitccb5efd3
 - rc6 build
 
