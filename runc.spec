@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 12f6a991201fdb8f82579582d5e00e28fba06d0a
+%global commit0 6635b4f0c6af3810594d2770f662f34ddc15b40d
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 67.dev.git%{shortcommit0}%{?dist}
+Release: 68.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -165,13 +165,16 @@ providing packages with %{import_path} prefix.
 
 %build
 mkdir -p GOPATH
+mv vendor src
+
 pushd GOPATH
     mkdir -p src/%{provider}.%{provider_tld}/%{project}
     ln -s $(dirs +1 -l) src/%{import_path}
 popd
 
+
 pushd GOPATH/src/%{import_path}
-export GOPATH=%{gopath}:$(pwd)/GOPATH
+export GOPATH=$(pwd)/GOPATH:$(pwd)
 
 make BUILDTAGS="seccomp selinux" all
 
@@ -284,6 +287,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Feb 12 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-68.dev.git6635b4f
+- Resolves: #1674488 - CVE-2019-5736
+
 * Tue Jan 15 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-67
 - umount all procfs and sysfs with --no-pivot
 
