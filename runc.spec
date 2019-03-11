@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 68.dev.git%{shortcommit0}%{?dist}
+Release: 69.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -61,7 +61,7 @@ BuildRequires: golang(github.com/syndtr/gocapability/capability)
 BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
-Requires(pre): container-selinux >= 2:2.2-2
+Recommends: container-selinux >= 2:2.85-1
 
 %ifnarch s390x
 Recommends: criu
@@ -287,6 +287,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Mar 11 2019 Dan Walsh (Bot) <dwalsh@fedoraproject.org> - 2:1.0.0-69.dev.git2b18fe1
+- Change Requires container-selinux to recommends container-selinux
+
 * Tue Feb 12 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-68.dev.git6635b4f
 - Resolves: #1674488 - CVE-2019-5736
 
