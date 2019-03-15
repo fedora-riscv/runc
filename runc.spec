@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 6635b4f0c6af3810594d2770f662f34ddc15b40d
+%global commit0 2b18fe1d885ee5083ef9f0838fee39b62d653e30
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 69.dev.git%{shortcommit0}%{?dist}
+Release: 82.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -165,16 +165,13 @@ providing packages with %{import_path} prefix.
 
 %build
 mkdir -p GOPATH
-mv vendor src
-
 pushd GOPATH
     mkdir -p src/%{provider}.%{provider_tld}/%{project}
     ln -s $(dirs +1 -l) src/%{import_path}
 popd
 
-
 pushd GOPATH/src/%{import_path}
-export GOPATH=$(pwd)/GOPATH:$(pwd)
+export GOPATH=%{gopath}:$(pwd)/GOPATH
 
 make BUILDTAGS="seccomp selinux" all
 
@@ -287,17 +284,74 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
-* Mon Mar 11 2019 Dan Walsh (Bot) <dwalsh@fedoraproject.org> - 2:1.0.0-69.dev.git2b18fe1
+* Mon Mar 11 2019 Dan Walsh (Bot) <dwalsh@fedoraproject.org> - 2:1.0.0-82.dev.git2b18fe1
 - Change Requires container-selinux to recommends container-selinux
 
-* Tue Feb 12 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-68.dev.git6635b4f
-- Resolves: #1674488 - CVE-2019-5736
+* Fri Mar 08 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-81.dev.git2b18fe1
+- autobuilt 2b18fe1
 
-* Tue Jan 15 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-67
-- umount all procfs and sysfs with --no-pivot
+* Wed Mar 06 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-80.dev.git923a8f8
+- autobuilt 923a8f8
 
-* Fri Dec 21 2018 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-66.dev.gitbbb17ef
-- UPdate to latest upstream for CRIU Fixes
+* Tue Mar 05 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-79.dev.gitf739110
+- autobuilt f739110
+
+* Tue Feb 26 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-78.dev.gitf79e211
+- autobuilt f79e211
+
+* Sun Feb 24 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-77.dev.git5b5130a
+- autobuilt 5b5130a
+
+* Fri Feb 22 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-76.dev.git8084f76
+- autobuilt 8084f76
+
+* Sat Feb 16 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-75.dev.git751f18d
+- autobuilt 751f18d
+
+* Thu Feb 14 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-74.dev.gitf414f49
+- autobuilt f414f49
+
+* Wed Feb 13 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-73.dev.git0a012df
+- autobuilt 0a012df
+
+* Tue Feb 12 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-72.dev.git6635b4f
+- autobuilt 6635b4f
+
+* Sat Feb 09 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-71.dev.gitdd023c4
+- autobuilt dd023c4
+
+* Sat Feb 02 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-70.dev.gite4fa8a4
+- autobuilt e4fa8a4
+
+* Sat Jan 26 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-69.dev.git8011af4
+- autobuilt 8011af4
+
+* Wed Jan 16 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-68.dev.gitc1e454b
+- autobuilt c1e454b
+
+* Tue Jan 15 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-67.dev.git12f6a99
+- autobuilt 12f6a99
+
+* Fri Dec 21 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-66.dev.gitbbb17ef
+- autobuilt bbb17ef
+
+* Tue Dec 11 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-65.dev.gitf5b9991
+- autobuilt f5b9991
+
+* Sun Dec 09 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-64.dev.git859f745
+- autobuilt 859f745
+
+* Wed Dec 05 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-63.dev.git25f3f89
+- autobuilt 25f3f89
+
+* Tue Dec 04 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-62.dev.git96ec217
+- autobuilt 96ec217
+
+* Tue Nov 27 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-61.dev.git4932620
+- autobuilt 4932620
+
+* Sun Nov 25 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-60.dev.git9397a6f
+- autobuilt 9397a6f
 
 * Sat Nov 24 2018 Dan Walsh <dwalsh@redhat.name> - 2:1.0.0-59.dev.gitccb5efd3
 - rc6 build
