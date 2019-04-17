@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 dd22a84864f529678e92dfe2d23b3daf6c786257
+%global commit0 029124da7af7360afa781a0234d1b083550f797c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 85.dev.git%{shortcommit0}%{?dist}
+Release: 90.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -173,7 +173,7 @@ popd
 pushd GOPATH/src/%{import_path}
 export GOPATH=%{gopath}:$(pwd)/GOPATH
 
-make BUILDTAGS="seccomp selinux" all
+make BUILDTAGS="seccomp selinux nokmem" all
 
 sed -i '/\#\!\/bin\/bash/d' contrib/completions/bash/%{name}
 
@@ -284,6 +284,21 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Apr 17 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-90.dev.gitda202113
+- Build with nokmem
+
+* Thu Apr 04 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-89.dev.git029124d
+- autobuilt 029124d
+
+* Wed Apr 03 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-88.dev.git6a3f474
+- autobuilt 6a3f474
+
+* Thu Mar 28 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-87.dev.gitda202113
+- release candidate 7
+
+* Sat Mar 23 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-86.dev.git11fc498
+- autobuilt 11fc498
+
 * Thu Mar 21 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-85.dev.gitdd22a84
 - autobuilt dd22a84
 
