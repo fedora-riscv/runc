@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 90.dev.git%{shortcommit0}%{?dist}
+Release: 91.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -173,7 +173,7 @@ popd
 pushd GOPATH/src/%{import_path}
 export GOPATH=%{gopath}:$(pwd)/GOPATH
 
-make BUILDTAGS="seccomp selinux nokmem" all
+make BUILDTAGS="seccomp selinux" all
 
 sed -i '/\#\!\/bin\/bash/d' contrib/completions/bash/%{name}
 
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Apr 19 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-91.dev.gitda202113
+- Revert Build with nokmem
+
 * Wed Apr 17 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-90.dev.gitda202113
 - Build with nokmem
 
