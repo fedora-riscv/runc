@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 029124da7af7360afa781a0234d1b083550f797c
+%global commit0 c1b8c57aba46dcfa43947c346b3d80eacb7613c3
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 91.dev.git%{shortcommit0}%{?dist}
+Release: 92.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Apr 24 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-92.dev.gitc1b8c57a
+- Fix issue with runc failing on SELinux disabled machines
+
 * Fri Apr 19 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-91.dev.gitda202113
 - Revert Build with nokmem
 
