@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 b9b6cc6e47fe4f2aa4f744a1fc62d248c182d28d
+%global commit0 6cccc1760d57d9e1bc856b96eeb7ee02b7b8101d
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 93.dev.git%{shortcommit0}%{?dist}
+Release: 94.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu Jul 18 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-94.dev.git6cccc17
+- autobuilt 6cccc17
+
 * Wed May 15 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-93.dev.gitb9b6cc6e
 - Fix issue with runc interacting with /dev/stderr
 
