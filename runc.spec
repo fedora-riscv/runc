@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 94.dev.git%{shortcommit0}%{?dist}
+Release: 95.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.0-95.dev.git6cccc17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Thu Jul 18 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-94.dev.git6cccc17
 - autobuilt 6cccc17
 
