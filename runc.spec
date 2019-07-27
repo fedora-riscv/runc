@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 6cccc1760d57d9e1bc856b96eeb7ee02b7b8101d
+%global commit0 9ae790178ee4535e1afd865eed70a7f7cdb655ac
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 95.dev.git%{shortcommit0}%{?dist}
+Release: 96.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Sat Jul 27 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-96.dev.git9ae7901
+- autobuilt 9ae7901
+
 * Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.0-95.dev.git6cccc17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
