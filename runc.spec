@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 98.dev.git%{shortcommit0}%{?dist}
+Release: 99.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -107,6 +107,7 @@ Requires: golang(github.com/syndtr/gocapability/capability)
 Requires: golang(github.com/vishvananda/netlink)
 Requires: golang(github.com/vishvananda/netlink/nl)
 
+Provides: oci-runtime
 Provides: golang(%{import_path}/libcontainer) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/cgroups) = %{version}-%{release}
@@ -284,6 +285,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Sep 9 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-99
+- Add provides oci-runtime
+
 * Mon Aug 05 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.0-98.dev.git2e94378
 - autobuilt 2e94378
 
