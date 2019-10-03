@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 99.dev.git%{shortcommit0}%{?dist}
+Release: 100.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -286,6 +286,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu Oct 03 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-100.dev.git2e94378
+- add patch for cgroupsv2
+- From: Giuseppe Scrivano <gscrivan@redhat.com>
+
 * Mon Sep 9 2019 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.0-99
 - Add provides oci-runtime
 
