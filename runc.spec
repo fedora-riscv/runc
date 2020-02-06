@@ -50,7 +50,7 @@ License: ASL 2.0
 URL: https://github.com/opencontainers/%{name}
 Source0: %{download_url}
 Patch0: 1807.patch
-%if 0%{fedora}
+%if 0%{?fedora}
 Patch1: cgroups-v2.patch
 %endif
 
