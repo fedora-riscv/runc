@@ -2,7 +2,12 @@
 %global with_bundled 1
 %global with_check 0
 %global with_unit_test 0
+
+%if 0%{?fedora}
 %global with_debug 1
+%else
+%global with_debug 0
+%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
@@ -11,33 +16,48 @@
 %global debug_package   %{nil}
 %endif
 
-%global provider github
-%global provider_tld com
-%global project opencontainers
-%global repo runc
+%if ! 0%{?gobuild:1}
+%define gobuild(o:) GO111MODULE=off go build -buildmode pie -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:-}" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n') -extldflags '-Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld '" -a -v -x %{?**};
+%endif
+
+%define provider github
+%define provider_tld com
+%define project opencontainers
+%define repo runc
 # https://github.com/opencontainers/runc
-%global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
-%global import_path %{provider_prefix}
-%global git0 https://github.com/opencontainers/runc
-%global commit0 dc9208a3303feef5b3839f4323d9beb36df0a9dd
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%define provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
+%define import_path %{provider_prefix}
+%define git0 https://github.com/opencontainers/runc
+%define commit0 dc9208a3303feef5b3839f4323d9beb36df0a9dd
+%define shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
+# Used for comparing with latest upstream tag
+# to decide whether to autobuild (non-rawhide only)
+%define built_tag v1.0.0-rc10
+%define built_tag_strip %(b=%{built_tag}; echo ${b:1})
+%define download_url https://github.com/opencontainers/%{name}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
+%if 0%{?fedora}
 Epoch: 2
+%else
+Epoch: 0
+%endif
 Version: 1.0.0
-Release: 102.dev.git%{shortcommit0}%{?dist}
+Release: 103.dev%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
-URL: %{git0}
-Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+URL: https://github.com/opencontainers/%{name}
+Source0: %{download_url}
 Patch0: 1807.patch
+%if 0%{fedora}
 Patch1: cgroups-v2.patch
+%endif
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
 ExclusiveArch: %{ix86} x86_64 %{arm} aarch64 ppc64le %{mips} s390x
-# If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
-BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
+BuildRequires: golang
 BuildRequires: pkgconfig(libseccomp)
 BuildRequires: go-md2man
 BuildRequires: make
@@ -115,7 +135,7 @@ Requires: golang(github.com/seccomp/libseccomp-golang)
 Requires: golang(github.com/syndtr/gocapability/capability)
 Requires: golang(github.com/vishvananda/netlink)
 Requires: golang(github.com/vishvananda/netlink/nl)
-Provides: oci-runtime
+Provides: oci-runtime = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/cgroups) = %{version}-%{release}
@@ -170,7 +190,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%autosetup -Sgit -n %{name}-%{commit0}
+%autosetup -Sgit -n %{name}-%{built_tag_strip}
 
 %build
 mkdir -p GOPATH
@@ -293,6 +313,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu Feb 06 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-103.dev
+- update release tag format for CentOS on OBS
+
 * Thu Jan 30 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-102.dev.gitdc9208a
 - Resolves: #1796107, #1796109 - Security fix for CVE-2019-19921
 - bump to v1.0.0-rc10
