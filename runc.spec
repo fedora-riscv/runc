@@ -38,11 +38,7 @@
 %define download_url https://github.com/opencontainers/%{name}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
-%if 0%{?fedora}
 Epoch: 2
-%else
-Epoch: 0
-%endif
 Version: 1.0.0
 Release: 103.dev%{?dist}
 Summary: CLI for running Open Containers
