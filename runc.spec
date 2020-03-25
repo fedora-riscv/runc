@@ -30,7 +30,6 @@ Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
-Patch0: 1807.patch
 Patch1: cgroups-v2.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
