@@ -35,7 +35,7 @@
 # to decide whether to autobuild (non-rawhide only)
 %define built_tag v1.0.0-rc10
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
-%define download_url https://github.com/opencontainers/%{name}/archive/%{built_tag}.tar.gz
+%define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
 Epoch: 2
