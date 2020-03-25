@@ -22,6 +22,12 @@
 %global commit0 e6555cc01a92b599bef90dbe8cb3b7bb74391da9
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
+# Used for comparing with latest upstream tag
+# to decide whether to autobuild (non-rawhide only)
+%define built_tag v1.0.0-rc10
+%define built_tag_strip %(b=%{built_tag}; echo ${b:1})
+%define download_url %{git0}/archive/%{built_tag}.tar.gz
+
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
@@ -29,7 +35,7 @@ Release: 144.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
-Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+Source0: %{download_url}
 Patch0: 1807.patch
 Patch1: cgroups-v2.patch
 
@@ -163,7 +169,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%autosetup -Sgit -n %{name}-%{commit0}
+%autosetup -Sgit -n %{name}-%{built_tag_strip}
 
 %build
 mkdir -p GOPATH
