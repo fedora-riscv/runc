@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 1b97c04f9825d6f63442a4d64eab88334cdc8cd7
+%global commit0 b2163040dbcfc65ae54fb35412ecf258fe8d9707
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 238.dev.git%{shortcommit0}%{?dist}
+Release: 239.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -285,6 +285,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Jun 10 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.0-239.dev.gitb216304
+- autobuilt b216304
+
 * Fri Jun 05 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.0-238.dev.git1b97c04
 - autobuilt 1b97c04
 
