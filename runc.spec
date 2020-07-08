@@ -19,25 +19,24 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 e6555cc01a92b599bef90dbe8cb3b7bb74391da9
+%global commit0 24a3cf88a7ae5f4995f6750654c0e2ca61ef4bb2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.0.0-rc10
+%define built_tag v1.0.0-rc91
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 144.dev.git%{shortcommit0}%{?dist}
+Release: 145.rc91.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{download_url}
-Patch0: 1807.patch
-Patch1: cgroups-v2.patch
+Patch0: cgroups-v2.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
@@ -292,6 +291,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Jul 08 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-145.rc91
+- bump to v1.0.0-rc91
+
 * Tue Feb 04 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.0-144.dev.gite6555cc
 - autobuilt e6555cc
 
