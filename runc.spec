@@ -43,7 +43,9 @@ Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{download_url}
+%if 0%{?fedora} && ! 0%{?centos}
 Patch0: cgroups-v2.patch
+%endif
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
