@@ -11,13 +11,16 @@
 %global debug_package   %{nil}
 %endif
 
+%if ! 0%{?gobuild:1}
+%define gobuild(o:) GO111MODULE=off go build -buildmode pie -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:-}" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n') -extldflags '-Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld '" -a -v -x %{?**};
+%endif
+
 %global provider github
 %global provider_tld com
 %global project opencontainers
 %global repo runc
 # https://github.com/opencontainers/runc
-%global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
-%global import_path %{provider_prefix}
+%global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://github.com/opencontainers/runc
 %global commit0 24a3cf88a7ae5f4995f6750654c0e2ca61ef4bb2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
@@ -180,17 +183,15 @@ popd
 pushd GOPATH/src/%{import_path}
 export GOPATH=%{gopath}:$(pwd)/GOPATH
 
-make BUILDTAGS="seccomp selinux" all
+export BUILDTAGS="seccomp selinux"
+%gobuild -o %{name} %{import_path}
 
+make man
 sed -i '/\#\!\/bin\/bash/d' contrib/completions/bash/%{name}
 
 %install
 install -d -p %{buildroot}%{_bindir}
 install -p -m 755 %{name} %{buildroot}%{_bindir}
-
-# generate man pages
-man/md2man-all.sh
-
 # install man pages
 install -d -p %{buildroot}%{_mandir}/man8
 install -p -m 0644 man/man8/*.8 %{buildroot}%{_mandir}/man8/.
