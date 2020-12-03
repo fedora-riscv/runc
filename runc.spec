@@ -26,19 +26,19 @@
 # https://github.com/opencontainers/runc
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 24a3cf88a7ae5f4995f6750654c0e2ca61ef4bb2
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+#%%global commit0 dedadbf9ea76c888dd9067fd6f29f3c441aba421
+#%%global shortcommit0 %%(c=%%{commit0}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.0.0-rc91
+%define built_tag v1.0.0-rc92
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 145.rc91.git%{shortcommit0}%{?dist}
+Release: 146.rc92%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -298,6 +298,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu Dec  3 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-146.rc92
+- use same upstream commit as f33
+
 * Wed Jul 08 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-145.rc91
 - bump to v1.0.0-rc91
 
