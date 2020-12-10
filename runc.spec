@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 336.dev.git%{shortcommit0}%{?dist}
+Release: 337.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -284,6 +284,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Thu Dec 10 2020 Matyáš Kroupa <kroupa.matyas@gmail.com> - 2:1.0.0-337.dev.git544048b
+- Remove cgroupv2.patch
+
 * Tue Dec  8 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.0-336.dev.git544048b
 - autobuilt 544048b
 
