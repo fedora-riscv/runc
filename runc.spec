@@ -38,7 +38,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 148.rc93%{?dist}
+Release: 149.rc93%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -83,7 +83,10 @@ Recommends: container-selinux >= 2:2.85-1
 %endif
 
 %ifnarch s390x
+%if 0%{?fedora} || 0%{?centos} >= 8
 Recommends: criu
+%else
+Requires: criu
 %endif
 
 %description
@@ -302,6 +305,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Feb 15 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-149.rc93
+- adjust for centos7
+
 * Mon Feb 15 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-148.rc93
 - bump for OBS
 
