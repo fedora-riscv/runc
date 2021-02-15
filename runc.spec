@@ -88,6 +88,7 @@ Recommends: criu
 %else
 Requires: criu
 %endif
+%endif
 
 %description
 The runc command can be used to start containers which are packaged
