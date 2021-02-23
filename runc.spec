@@ -38,7 +38,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 149.rc93%{?dist}
+Release: 149.rc93%{?dist}.1
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -213,6 +213,12 @@ install -p -m 0644 man/man8/*.8 %{buildroot}%{_mandir}/man8/.
 install -d -p %{buildroot}%{_datadir}/bash-completion/completions
 install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash-completion/completions
 
+%if 0%{?centos} <= 7
+# https://bugzilla.redhat.com/show_bug.cgi?id=1823374#c17
+install -d -p %{buildroot}%{_usr}/lib/sysctl.d
+echo "fs.may_detach_mounts=1" > %{buildroot}%{_usr}/lib/sysctl.d/99-containers.conf
+%endif
+
 # source codes for building projects
 %if 0%{?with_devel}
 install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
@@ -284,12 +290,21 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
 
+%post
+%if 0%{?centos} <= 7
+%sysctl_apply 99-containers.conf
+%endif
+
 %files
 %license LICENSE
 %doc MAINTAINERS_GUIDE.md PRINCIPLES.md README.md CONTRIBUTING.md
 %{_bindir}/%{name}
 %{_mandir}/man8/%{name}*
 %{_datadir}/bash-completion/completions/%{name}
+
+%if 0%{?centos} <= 7
+%{_usr}/lib/sysctl.d/99-containers.conf
+%endif
 
 %if 0%{?with_devel}
 %files devel -f devel.file-list
@@ -306,6 +321,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Feb 23 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-149.rc93.1
+- add support for setting fs.may_detach_mounts sysctl
+
 * Mon Feb 15 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-149.rc93
 - adjust for centos7
 
