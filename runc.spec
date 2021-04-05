@@ -19,13 +19,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 7e3c3e8c22cb128c99c0f3dab7c64815cae178f8
+%global commit0 12644e614e25b05da6fd08a38ffa0cfe1903fdec
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 374.dev.git%{shortcommit0}%{?dist}
+Release: 375.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -285,6 +285,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Apr 05 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-375.dev.git12644e6
+- bump to v1.0.0-rc93
+
 * Mon Apr 05 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-374.dev.git7e3c3e8
 - Patch: revert https://github.com/opencontainers/runc/pull/2773
 
