@@ -25,11 +25,12 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 373.dev.git%{shortcommit0}%{?dist}
+Release: 374.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+Patch1: trimpath.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
@@ -284,6 +285,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Apr 05 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-374.dev.git7e3c3e8
+- Patch: revert https://github.com/opencontainers/runc/pull/2773
+
 * Tue Feb 02 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.0-373.dev.git7e3c3e8
 - autobuilt 7e3c3e8
 
