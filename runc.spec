@@ -25,7 +25,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 375.dev.git%{shortcommit0}%{?dist}
+Release: 376.dev.git%{shortcommit0}%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -107,7 +107,7 @@ Requires: golang(github.com/syndtr/gocapability/capability)
 Requires: golang(github.com/vishvananda/netlink)
 Requires: golang(github.com/vishvananda/netlink/nl)
 
-Provides: oci-runtime = 1
+Provides: oci-runtime
 Provides: golang(%{import_path}/libcontainer) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/cgroups) = %{version}-%{release}
@@ -285,6 +285,13 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Tue Apr 13 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-376.dev.git12644e6
+- unversioned Provides: oci-runtime
+- runc package will also provide an unversioned Provides: oci-runtime.
+- user should pull in runc separately or else it will install crun by default
+ (alphabetical order)
+- similar situation as caddy, httpd, lighttpd and nginx having Provides: webserver
+
 * Mon Apr 05 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-375.dev.git12644e6
 - bump to v1.0.0-rc93
 
