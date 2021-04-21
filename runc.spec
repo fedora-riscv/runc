@@ -11,6 +11,10 @@
 %global debug_package   %{nil}
 %endif
 
+%if ! 0%{?gobuild:1}
+%define gobuild(o:) GO111MODULE=off go build -buildmode pie -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:-}" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n') -extldflags '-Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld '" -a -v -x %{?**};
+%endif
+
 %global provider github
 %global provider_tld com
 %global project opencontainers
@@ -19,17 +23,21 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
-%global commit0 12644e614e25b05da6fd08a38ffa0cfe1903fdec
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
+# Used for comparing with latest upstream tag
+# to decide whether to autobuild (non-rawhide only)
+%define built_tag v1.0.0-rc93
+%define built_tag_strip %(b=%{built_tag}; echo ${b:1})
+%define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 376.dev.git%{shortcommit0}%{?dist}
+Release: 377.rc93%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
-Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+Source0: %{download_url}
 Patch1: trimpath.patch
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
@@ -41,6 +49,7 @@ BuildRequires: pkgconfig(libseccomp)
 BuildRequires: go-md2man
 BuildRequires: make
 BuildRequires: git
+Provides: oci-runtime
 
 %if ! 0%{?with_bundled}
 BuildRequires: golang(github.com/Sirupsen/logrus)
@@ -107,7 +116,6 @@ Requires: golang(github.com/syndtr/gocapability/capability)
 Requires: golang(github.com/vishvananda/netlink)
 Requires: golang(github.com/vishvananda/netlink/nl)
 
-Provides: oci-runtime
 Provides: golang(%{import_path}/libcontainer) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/apparmor) = %{version}-%{release}
 Provides: golang(%{import_path}/libcontainer/cgroups) = %{version}-%{release}
@@ -162,7 +170,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%autosetup -Sgit -n %{name}-%{commit0}
+%autosetup -Sgit -n %{name}-%{built_tag_strip}
 
 %build
 mkdir -p GOPATH
@@ -285,6 +293,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed Apr 21 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-377.rc93
+- add Provides: oci-runtime in the right place
+
 * Tue Apr 13 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-376.dev.git12644e6
 - unversioned Provides: oci-runtime
 - runc package will also provide an unversioned Provides: oci-runtime.
