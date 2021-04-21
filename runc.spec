@@ -2,7 +2,11 @@
 %global with_bundled 1
 %global with_check 0
 %global with_unit_test 0
+%if 0%{?fedora}
 %global with_debug 1
+%else
+%global with_debug 0
+%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
