@@ -70,7 +70,11 @@ BuildRequires: golang(github.com/syndtr/gocapability/capability)
 BuildRequires: golang(github.com/vishvananda/netlink)
 BuildRequires: golang(github.com/vishvananda/netlink/nl)
 %endif
+%if 0%{?centos} >= 8
 Recommends: container-selinux >= 2:2.85-1
+%else
+Requires: container-selinux >= 2:2.85-1
+%endif
 
 %ifnarch s390x
 Recommends: criu
