@@ -84,8 +84,12 @@ Recommends: container-selinux >= 2:2.85-1
 Requires: container-selinux >= 2:2.85-1
 %endif
 
+%if 0%{?centos} <= 7
+Requires: criu
+%else
 %ifnarch s390x
 Recommends: criu
+%endif
 %endif
 
 %description
