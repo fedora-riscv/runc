@@ -30,14 +30,14 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.0.0-rc93
+%define built_tag v1.0.0-rc95
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.0
-Release: 377.rc93%{?dist}
+Release: 378.rc95%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -309,6 +309,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Wed May 19 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-378.rc95
+- Bump to v1.0.0-rc95
+
 * Wed Apr 21 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.0-377.rc93
 - add Provides: oci-runtime in the right place
 
