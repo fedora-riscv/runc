@@ -1,9 +1,9 @@
 diff --git a/Makefile b/Makefile
-index e13d8f1d..605d7109 100644
+index aff6d531..9a0ed3aa 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -23,9 +23,9 @@ ifeq ($(shell $(GO) env GOOS),linux)
- 		GO_BUILDMODE := "-buildmode=pie"
+@@ -25,9 +25,9 @@ ifeq ($(shell $(GO) env GOOS),linux)
+ 		endif
  	endif
  endif
 -GO_BUILD := $(GO) build -trimpath $(MOD_VENDOR) $(GO_BUILDMODE) $(EXTRA_FLAGS) -tags "$(BUILDTAGS)" \
