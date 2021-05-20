@@ -3,7 +3,7 @@
 %global with_check 0
 %global with_unit_test 0
 %if 0%{?fedora}
-%global with_debug 1
+%global with_debug 0
 %else
 %global with_debug 0
 %endif
