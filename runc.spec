@@ -30,14 +30,14 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.0.0-rc95
+%define built_tag v1.0.1
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: %{repo}
 Epoch: 2
-Version: 1.0.0
-Release: 378.rc95%{?dist}
+Version: 1.0.1
+Release: 1%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -309,6 +309,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Jul 19 2021 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.1-0.dev
+- bump to runc-1.0.1
+
 * Wed May 19 2021 Peter Hunt <pehunt@redhat.com> - 2:1.0.0-378.rc95
 - Bump to v1.0.0-rc95
 
