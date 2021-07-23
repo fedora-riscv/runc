@@ -37,7 +37,7 @@
 Name: %{repo}
 Epoch: 2
 Version: 1.0.1
-Release: 0%{?dist}
+Release: 1%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -309,6 +309,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.1-1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Mon Jul 19 2021 Daniel Walsh <dwalsh@fedoraproject.org> - 2:1.0.1-0.dev
 - bump to runc-1.0.1
 
