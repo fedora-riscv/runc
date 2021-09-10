@@ -29,20 +29,18 @@
 %global git0 https://github.com/opencontainers/runc
 
 # Used for comparing with latest upstream tag
-# to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.0.1
-%define built_tag_strip %(b=%{built_tag}; echo ${b:1})
-%define download_url %{git0}/archive/%{built_tag}.tar.gz
+# to decide whether to autobuild
+%global built_tag v1.0.2
+%global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: %{repo}
 Epoch: 2
 Version: 1.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
-Source0: %{download_url}
-Patch1: trimpath.patch
+Source0: %{git0}/archive/%{built_tag}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
@@ -187,6 +185,7 @@ providing packages with %{import_path} prefix.
 
 %prep
 %autosetup -Sgit -n %{name}-%{built_tag_strip}
+sed -i 's/ -trimpath//g' Makefile
 
 %build
 mkdir -p GOPATH
@@ -309,6 +308,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Sep 10 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.2-2
+- use correct v1.0.2 tarball, move trimpath patch in-rpm-spec
+
 * Fri Sep 10 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.2-1
 - autobuilt v1.0.2
 
