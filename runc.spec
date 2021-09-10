@@ -36,7 +36,7 @@
 
 Name: %{repo}
 Epoch: 2
-Version: 1.0.1
+Version: 1.0.2
 Release: 1%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
@@ -309,6 +309,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Fri Sep 10 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.2-1
+- autobuilt v1.0.2
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.0.1-1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
