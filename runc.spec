@@ -30,13 +30,13 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild
-%global built_tag v1.0.2
+%global built_tag v1.0.3
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: %{repo}
 Epoch: 2
-Version: 1.0.2
-Release: 2%{?dist}
+Version: 1.0.3
+Release: 1%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0
 URL: %{git0}
@@ -308,6 +308,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/Godeps/_workspace:%{gopath}
 %endif
 
 %changelog
+* Mon Dec 06 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.0.3-1
+- autobuilt v1.0.3
+
 * Fri Sep 10 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.0.2-2
 - use correct v1.0.2 tarball, move trimpath patch in-rpm-spec
 
