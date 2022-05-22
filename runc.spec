@@ -24,7 +24,7 @@
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
 
-%global built_tag v1.1.1
+%global built_tag v1.1.2
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %global gen_version %(b=%{built_tag_strip}; echo ${b/-/"~"})
 
@@ -49,7 +49,6 @@ BuildRequires: golang
 BuildRequires: pkgconfig(libseccomp)
 BuildRequires: go-md2man
 BuildRequires: make
-BuildRequires: git
 Provides: oci-runtime
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' go.mod | sort | uniq | sed -e 's/-/_/g' -e '/bundled(golang())/d' -e '/bundled(golang(go\|module\|replace\|require))/d'
@@ -89,7 +88,7 @@ in accordance with the Open Container Initiative's specifications,
 and to manage containers running under runc.
 
 %prep
-%autosetup -Sgit -n %{name}-%{built_tag_strip}
+%autosetup -p1 -n %{name}-%{built_tag_strip}
 sed -i 's/ -trimpath//g' Makefile
 
 %build
@@ -142,6 +141,11 @@ install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash
 %{_datadir}/bash-completion/completions/%{name}
 
 %changelog
+* Mon Jun 27 2022 Maxwell G <gotmax@e.email> - 2:1.1.2-1
+- Update to 1.1.2. Fixes rhbz#2069648.
+- Mitigate CVE-2022-29162 / GHSA-f3fp-gc8g-vw66.
+- Don't pull in git unnecessarily
+
 * Sat Jun 18 2022 Robert-André Mauchin <zebob.m@gmail.com> - 2:1.1.1-2
 - Rebuilt for CVE-2022-1996, CVE-2022-24675, CVE-2022-28327, CVE-2022-27191,
   CVE-2022-29526, CVE-2022-30629
