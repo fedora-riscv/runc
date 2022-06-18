@@ -31,7 +31,7 @@
 Name: %{repo}
 Epoch: 2
 Version: %{gen_version}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0 and BSD and MIT
 URL: %{git0}
@@ -142,6 +142,10 @@ install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash
 %{_datadir}/bash-completion/completions/%{name}
 
 %changelog
+* Sat Jun 18 2022 Robert-André Mauchin <zebob.m@gmail.com> - 2:1.1.1-2
+- Rebuilt for CVE-2022-1996, CVE-2022-24675, CVE-2022-28327, CVE-2022-27191,
+  CVE-2022-29526, CVE-2022-30629
+
 * Tue Mar 29 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.1.1-1
 - Bump to v1.1.1
 - add hardening flags
