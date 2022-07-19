@@ -31,7 +31,7 @@
 Name: %{repo}
 Epoch: 2
 Version: %{gen_version}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0 and BSD and MIT
 URL: %{git0}
@@ -141,6 +141,10 @@ install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash
 %{_datadir}/bash-completion/completions/%{name}
 
 %changelog
+* Tue Jul 19 2022 Maxwell G <gotmax@e.email> - 2:1.1.2-3
+- Rebuild for CVE-2022-{1705,32148,30631,30633,28131,30635,30632,30630,1962} in
+  golang
+
 * Mon Jun 27 2022 Maxwell G <gotmax@e.email> - 2:1.1.2-1
 - Update to 1.1.2. Fixes rhbz#2069648.
 - Mitigate CVE-2022-29162 / GHSA-f3fp-gc8g-vw66.
