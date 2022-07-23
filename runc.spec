@@ -31,7 +31,7 @@
 Name: %{repo}
 Epoch: 2
 Version: %{gen_version}
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0 and BSD and MIT
 URL: %{git0}
@@ -141,6 +141,9 @@ install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash
 %{_datadir}/bash-completion/completions/%{name}
 
 %changelog
+* Sat Jul 23 2022 Fedora Release Engineering <releng@fedoraproject.org> - 2:1.1.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Tue Jul 19 2022 Maxwell G <gotmax@e.email> - 2:1.1.2-3
 - Rebuild for CVE-2022-{1705,32148,30631,30633,28131,30635,30632,30630,1962} in
   golang
