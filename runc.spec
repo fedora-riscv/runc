@@ -35,7 +35,7 @@ Release: 1%{?dist}
 Summary: CLI for running Open Containers
 License: ASL 2.0 and BSD and MIT
 URL: %{git0}
-Source0: %{git0}/archive/%{built_tag}.tar.gz
+Source0: %{git0}/archive/%{built_tag}/%{name}-%{version}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch: %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 %%{arm}}
