@@ -24,7 +24,7 @@
 %global import_path %{provider_prefix}
 %global git0 https://github.com/opencontainers/runc
 
-%global built_tag v1.1.3
+%global built_tag v1.1.4
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %global gen_version %(b=%{built_tag_strip}; echo ${b/-/"~"})
 
@@ -141,6 +141,9 @@ install -p -m 0644 contrib/completions/bash/%{name} %{buildroot}%{_datadir}/bash
 %{_datadir}/bash-completion/completions/%{name}
 
 %changelog
+* Sat Oct 15 2022 Jan Kuparinen <copperi@fedoraproject.org> - 2:1.1.4-1
+- Update to 1.1.4.
+
 * Mon Aug 08 2022 Maxwell G <gotmax@e.email> - 2:1.1.3-1
 - Update to 1.1.3.
 
