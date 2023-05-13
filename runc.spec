@@ -23,7 +23,7 @@
 Name: %{repo}
 Epoch: 2
 Version: %{gen_version}
-Release: %autorelease
+Release: %autorelease -e rv64
 Summary: CLI for running Open Containers
 License: Apache-2.0 and BSD-2-Clause and BSD-3-Clause and MIT
 URL: %{git0}
@@ -59,7 +59,7 @@ Provides: bundled(golang(github.com/vishvananda/netlink)) = v1.1.0
 Provides: bundled(golang(github.com/vishvananda/netns)) = v0.0.0_20191106174202_0a2b9b5464df
 Recommends: container-selinux >= 2:2.85-1
 
-%ifnarch s390x
+%ifnarch s390x riscv64
 Recommends: criu
 %endif
 
